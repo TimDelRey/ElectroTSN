@@ -39,8 +39,9 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
-  gem 'annotate'
-  gem 'activesupport', '8.0.2'
+gem 'annotaterb'
+gem 'annotate'
+gem 'activesupport', '8.0.2'
 
 # auth
 gem 'trestle', '~> 0.10.1'
