@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class Receipt < ApplicationRecord
-    has_many :indications
+    belongs_to :user
 end
