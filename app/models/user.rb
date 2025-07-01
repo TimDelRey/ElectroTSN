@@ -24,6 +24,12 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
+    devise :database_authenticatable, :registerable,
+        :recoverable, :rememberable, :validatable
+
     has_many :indications
     has_many :receipts
+
+    validates :first_name, presence: true
+    validates :place_number, presence: true
 end
