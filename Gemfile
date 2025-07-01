@@ -39,12 +39,7 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
-
-# annotation
-gem 'annotaterb'
-gem 'annotate'
-gem 'activesupport', '8.0.2'
-
+  gem 'activesupport', '8.0.2'
 # auth
 gem 'trestle', '~> 0.10.1'
 gem 'trestle-auth', ' ~> 0.5.0'
@@ -64,7 +59,11 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
   gem 'factory_bot_rails'
-   gem 'rspec-rails'
+  gem 'rspec-rails'
+
+  # annotation
+  gem 'annotaterb'
+  # gem 'annotate'
 end
 
 group :development do
