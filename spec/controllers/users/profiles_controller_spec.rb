@@ -45,15 +45,27 @@ describe Users::ProfilesController, type: :controller do
     end
 
     context 'with different password confirm' do
+      render_views
       it 'renders edit with errors' do
+        old_encrypted_password = user.encrypted_password
+        patch :update, params: {
+          user: {
+            password: '12345678',
+            password_confirmation: 'qwertyui'
+          }
+        }
+        expect(user.encrypted_password).to eq(old_encrypted_password)
+        expect(response.body).to include("Пожалуйста, исправьте следующие ошибки:")
       end
     end
 
     context 'without place_number' do
-      it 'renders edit with errors' do
-        patch :update, params: { user: { email: '' } }
-        expect(response).to render_template(:edit)
-        expect(assigns(:user).errors[:email]).to be_present
+      render_views
+      it 'renders edit with error' do
+        old_place_number = user.place_number
+        patch :update, params: { user: { place_number: "" } }
+        expect(user.place_number).to eq(old_place_number)
+        expect(response.body).to include("Пожалуйста, исправьте следующие ошибки:")
       end
     end
   end
