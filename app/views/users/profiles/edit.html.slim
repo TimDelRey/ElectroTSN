@@ -1,0 +1,27 @@
+= form_with scope: :user, url: profile_path, method: :patch, local: true do |f|
+  table.table.table-bordered
+    tbody
+      tr
+        td = f.text_field :first_name, class: 'form-control'
+        td Фамилия
+      tr
+        td = f.text_field :name, class: 'form-control'
+        td Имя
+      tr
+        td = f.text_field :last_name, class: 'form-control'
+        td Отчество
+      tr
+        td = f.email_field :email, class: 'form-control'
+        td Email
+      tr
+        td = f.number_field :place_number, class: 'form-control'
+        td Номер участка
+      tr
+        td = f.password_field :password, autocomplete: 'new-password', class: 'form-control'
+        td Новый пароль (если хотите изменить)
+      tr
+        td = f.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control'
+        td Подтверждение пароля
+
+  = f.submit 'Сохранить', class: 'btn btn-primary', style: 'margin-top: 15px;'
+  = link_to 'Назад', profile_path, class: 'btn btn-secondary', style: 'margin-left: 10px;'
