@@ -1,6 +1,7 @@
 module Users
   class ProfilesController < BaseController
-    before_action: set_user, only: %i[edit update]
+    before_action :set_user, only: %i[edit update]
+
     def show
       # render json: current_user
     end

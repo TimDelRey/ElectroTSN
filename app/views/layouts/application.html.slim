@@ -1,0 +1,37 @@
+doctype html
+html
+  head
+    title ТСН "Столетовский" — учёт электроэнергии
+    meta name="viewport" content="width=device-width, initial-scale=1"
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    = stylesheet_link_tag 'style', media: 'all', 'data-turbo-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbo-track': 'reload', defer: true
+
+  body
+    header
+      h1 = link_to "ТСН ЖСТИЗ 'Столетовский'", root_path
+      nav
+        - if user_signed_in?
+          table.table-bordered
+            tr
+              td = button_to 'Личный кабинет', profile_path, class: "btn btn-primary"
+              td = button_to 'Выход', destroy_user_session_path, method: :delete, data: { confirm: "Вы уверены, что хотите выйти?" }, class: "logout-button"
+        - else
+          table.table-bordered
+            tr
+              td = link_to 'Вход', new_user_session_path
+              td = link_to 'Регистрация', new_user_registration_path
+
+    main
+      - if notice
+        .notice= notice
+
+      - if alert
+        .alert= alert
+
+      = yield
+
+    footer
+      | &copy; #{Time.current.year} ТСН "Столетовский". Все права защищены.
