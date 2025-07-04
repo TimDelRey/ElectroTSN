@@ -10,6 +10,9 @@ module Users
 
     def update
       if @user.update(profile_params)
+
+        bypass_sign_in(@user)
+
         redirect_to profile_path, notice: 'Данные обновлены.'
       else
         puts @user.errors.full_messages.inspect

@@ -16,7 +16,7 @@ html
         - if user_signed_in?
           table.table-bordered
             tr
-              td = button_to 'Личный кабинет', profile_path, class: "btn btn-primary"
+              td = link_to 'Личный кабинет', profile_path
               td = button_to 'Выход', destroy_user_session_path, method: :delete, data: { confirm: "Вы уверены, что хотите выйти?" }, class: "logout-button"
         - else
           table.table-bordered

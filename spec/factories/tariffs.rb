@@ -11,8 +11,8 @@
 #
 FactoryBot.define do
   factory :tariff do
-    title { "MyString" }
+    title { 'Однотарифный' }
     tariff_value { 1.5 }
-    discription { "MyText" }
+    discription { 'some discription about tariffs in Sevastopol' }
   end
 end

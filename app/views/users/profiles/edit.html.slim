@@ -1,4 +1,5 @@
 = form_with scope: :user, url: profile_path, method: :patch, local: true do |f|
+  = form_errors_for(@user)
   table.table.table-bordered
     tbody
       tr
