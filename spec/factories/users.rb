@@ -23,10 +23,13 @@
 #
 FactoryBot.define do
   factory :user do
-    first_name { "MyString" }
-    name { "MyString" }
-    last_name { "MyString" }
-    place_number { 1 }
-    users_tariff { "MyString" }
+    first_name     { 'Иванов' }
+    name           { 'Иван' }
+    last_name      { 'Иванович' }
+    place_number   { rand(1..100) }
+    users_tariff   { 'двутариaный'}
+    email          { 'test@test.test' }
+    password       { '123456' }
+    password_confirmation { '123456' }
   end
 end
