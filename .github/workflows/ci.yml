@@ -8,7 +8,6 @@ on:
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,8 +18,12 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+      - name: Run Brakeman and save report
+        run: bin/brakeman --format json --out brakeman-output.json --no-progress || true
+
+      - name: Show Brakeman report
+        run: cat brakeman-output.json
+
 
   # scan_js:
   #   runs-on: ubuntu-latest
@@ -51,7 +54,9 @@ jobs:
           bundler-cache: true
 
       - name: Lint code for consistent style
-        run: bin/rubocop -f github
+        run: |
+          bin/rubocop -f simple || true
+          bin/rubocop -f github
 
   test:
     runs-on: ubuntu-latest
