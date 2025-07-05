@@ -22,12 +22,11 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Run Brakeman and save report
-        run: bin/brakeman --format json --out brakeman-output.json --no-progress || true
-
-      - name: Show Brakeman report
-        run: cat brakeman-output.json
-
+      - name: Run Brakeman
+        run: |
+          bundle exec brakeman -f json -o brakeman-output.json || echo "Brakeman failed"
+          cat brakeman-output.json || echo "No Brakeman output"
+        continue-on-error: true
 
   # scan_js:
   #   runs-on: ubuntu-latest
