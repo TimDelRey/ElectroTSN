@@ -3,7 +3,7 @@ module FormErrorsHelper
     return if object.errors.blank?
 
     content_tag(:div, class: 'form-errors') do
-      concat(content_tag(:p, "Пожалуйста, исправьте следующие ошибки:"))
+      concat(content_tag(:p, 'Пожалуйста, исправьте следующие ошибки:'))
       concat(
         content_tag(:ul) do
           object.errors.full_messages.each do |msg|

@@ -27,7 +27,7 @@ FactoryBot.define do
     name           { 'Иван' }
     last_name      { 'Иванович' }
     place_number   { rand(1..100) }
-    users_tariff   { 'двутариaный'}
+    users_tariff   { 'двутариaный' }
     email          { 'test@test.test' }
     password       { '123456' }
     password_confirmation { '123456' }
