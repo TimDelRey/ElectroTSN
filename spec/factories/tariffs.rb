@@ -14,8 +14,11 @@
 #
 FactoryBot.define do
   factory :tariff do
-    title { 'Однотарифный' }
-    tariff_value { 1.5 }
+    title { 'Basic' }
+    first_step_value { 1.5 }
+    second_step_value { 2.5 }
+    third_step_value { 3.5 }
+    is_default { true }
     discription { 'some discription about tariffs in Sevastopol' }
   end
 end
