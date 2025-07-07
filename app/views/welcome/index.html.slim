@@ -1,0 +1,22 @@
+h2 Добро пожаловать в систему учёта электроэнергии ТСН "Столетовский"
+
+p
+  | Этот сайт предназначен для передачи показаний счётчиков, отслеживания начислений
+  | и формирования квитанций за электроэнергию в садовом кооперативе.
+
+- if user_signed_in?
+  p
+    | Здравствуйте, 
+    strong
+      = "#{current_user.first_name} #{current_user.name} #{current_user.last_name}"
+  ul
+    p
+    li = link_to 'Актуальные тарифы', tariffs_path
+    / li = link_to 'Передать показания', new_indication_path
+    / li = link_to 'История начислений', receipts_path
+- else
+  p
+    | Чтобы передать показания или просмотреть историю, пожалуйста,
+    = link_to 'войдите в систему', new_user_session_path
+    |  или
+    = link_to 'зарегистрируйтесь', new_user_registration_path
