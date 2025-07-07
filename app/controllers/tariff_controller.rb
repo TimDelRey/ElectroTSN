@@ -1,0 +1,2 @@
+class TariffController < ApplicationController
+end

@@ -24,10 +24,11 @@
     "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
   ],
   "remoteEnv": {
-    "SSH_AUTH_SOCK": "/ssh-agent"
+    "SSH_AUTH_SOCK": "/ssh-agent",
+    "RAILS_MASTER_KEY": "${env:RAILS_MASTER_KEY}"
   },
   "runArgs": [
     "-v",
-    "${localEnv:SSH_AUTH_SOCK}:/ssh-agent"
+    "--env-file", "${localWorkspaceFolder}/.env"
   ]
 }
