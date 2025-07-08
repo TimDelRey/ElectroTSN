@@ -5,7 +5,14 @@ Rails.application.routes.draw do
 
   namespace :users, path: '', as: '' do
     resource :profile, only: [:show, :edit, :update], shallow: true
+    # get :receipts, to 'some#user_receipts'
   end
 
   resources :tariffs, only: :index
+
+  # resources :receipts, only: [:index, :show] do
+  #   member do
+  #     get :download
+  #   end
+  # end
 end

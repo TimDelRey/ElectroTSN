@@ -48,6 +48,8 @@ gem 'devise'
 
 # xls, csv
 gem 'caxlsx' # read/write
+# for yandex S3
+gem 'aws-sdk-s3', require: false
 
 gem 'slim-rails'
 gem 'redis'
@@ -69,6 +71,7 @@ group :development, :test do
   # annotation
   gem 'annotaterb'
   # gem 'annotate'
+  gem 'dotenv-rails'
 end
 
 group :development do

@@ -13,4 +13,5 @@
 #
 class Receipt < ApplicationRecord
     belongs_to :user
+    has_one_attached :xls_file
 end
