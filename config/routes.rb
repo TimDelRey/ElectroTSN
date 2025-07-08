@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   namespace :users, path: '', as: '' do
     resource :profile, only: [:show, :edit, :update], shallow: true
   end
+
+  resources :tariffs, only: :index
 end
