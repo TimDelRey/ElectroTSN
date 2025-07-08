@@ -1,27 +1,5 @@
-# README
+### Hello
+It's proejct is for electricity accounting of the collective of old people of TSN Stoletovsky from Sevastopol
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-# ElectroTSN
-# ElectroTSN
-# ElectroTSN
+PS my dog <br>
+![Скриншот](doc/images/photo_2025-07-08_12-54-28.jpg)
