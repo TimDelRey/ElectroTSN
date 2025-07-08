@@ -10,7 +10,7 @@ table.table.table-bordered
       th Стоимость более 600кВт⋅ч (₽/кВт⋅ч)
       th Описание
   tbody
-    - Tariff.default_tariff.each do |tariff|
+    - @tariffs.each do |tariff|
       tr
         td = tariff.title
         td = number_with_precision(tariff.first_step_value, precision: 2)

@@ -7,5 +7,5 @@ Rails.application.routes.draw do
     resource :profile, only: [:show, :edit, :update], shallow: true
   end
 
-  resources :tariffs, only: [:index, :show]
+  resources :tariffs, only: :index
 end
