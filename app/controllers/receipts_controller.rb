@@ -1,4 +1,5 @@
 class ReceiptsController < Users::BaseController
+
   # удалить экшн когда будет index/download_receipt всех показаний юзера
   def index
     @receipts = Receipt.signed_receipts_for_user(current_user)

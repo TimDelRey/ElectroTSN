@@ -6,7 +6,7 @@
 #
 #  id          :bigint           not null, primary key
 #  for_month   :date
-#  receipt_url :string
+#  receipt_url :string           для справки, связанные ссылки реализованы через active_storage
 #  signed      :boolean          default(TRUE)
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
