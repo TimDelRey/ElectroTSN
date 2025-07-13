@@ -27,7 +27,7 @@ class Tariff < ApplicationRecord
   def only_one_default_tariff
     existing_default = Tariff.where(title: title, is_default: true).where.not(id: id)
     if existing_default.exists?
-      errors.add(:is_default, "можно выбрать только один дефолтный тариф для '#{title}'")
+      errors.add(:is_default, "Можно выбрать только один дефолтный тариф для '#{title}'")
     end
   end
 end
