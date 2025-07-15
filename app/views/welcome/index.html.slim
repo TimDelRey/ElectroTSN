@@ -10,7 +10,7 @@ p
       = "#{current_user.first_name} #{current_user.name} #{current_user.last_name}"
   ul
     p
-    li = link_to 'Актуальные тарифы', tariffs_path
+    li = link_to 'Актуальные тарифы', tariffs_path, class: 'button-link'
     / li = link_to 'Передать показания', new_indication_path
     / li = link_to 'История начислений', receipts_path
 - else
@@ -51,4 +51,4 @@ div#tariff-block
     br
     | – от 151 до 600 кВт*ч — 3,74 / 4,21 руб./кВт*ч;
     br
-    | – более 600 кВт*ч — 6,21 / 6,99*
+    | – более 600 кВт*ч — 6,21 / 6,99 руб./кВт*ч.

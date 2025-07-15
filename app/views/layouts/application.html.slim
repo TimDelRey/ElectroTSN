@@ -13,23 +13,21 @@ html
     = javascript_importmap_tags
 
     script type="module" 
-    import "application"
+      | import "application"
 
   body
     header
       h1 = link_to "ТСН ЖСТИЗ 'Столетовский'", root_path
       nav
-        - if user_signed_in?
-          table.table-bordered
-            tr
-              td = link_to 'Личный кабинет', profile_path
+        table.table-bordered
+          tr
+            - if user_signed_in?
+              td = link_to 'Личный кабинет', profile_path, class: 'button-link'
               td = button_to 'Выход', destroy_user_session_path, method: :delete, data: { confirm: "Вы уверены, что хотите выйти?" }, class: "logout-button"
-        - else
-          table.table-bordered
-            tr
+            - else
               td = link_to 'Вход', new_user_session_path
               td = link_to 'Регистрация', new_user_registration_path
-        = button_tag 'Темная тема', id: 'theme-button'
+            td = button_tag 'Темная тема', id: 'theme-button'
 
     main
       - if notice

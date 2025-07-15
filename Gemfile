@@ -32,14 +32,14 @@ gem 'solid_cable'
 gem 'bootsnap', require: false
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem 'kamal', require: false
+# gem 'kamal', require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem 'thruster', require: false
+# gem 'thruster', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem 'image_processing', '~> 1.2'
-gem 'activesupport', '8.0.2'
+# gem 'activesupport', '8.0.2'
 # auth
 gem 'trestle', '~> 0.10.1'
 gem 'trestle-auth', ' ~> 0.5.0'
@@ -49,9 +49,12 @@ gem 'devise'
 # xls, csv
 gem 'caxlsx' # read/write
 # for yandex S3
-gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-s3', '~> 1.137', require: false
 
 gem 'slim-rails'
+gem 'jquery-rails'
+# gem 'sprockets-rails'
+
 gem 'redis'
 gem 'sidekiq'
 
