@@ -9,10 +9,10 @@ document.addEventListener('turbo:load', function() {
     const block = $('#tariff-block');
 
     if (button.text() == 'Cкрыть') {
-      block.hide();
+      block.slideUp();
       button.text('Показать');
     } else {
-      block.show();
+      block.slideDown();
       button.text('Cкрыть');
     }
   });

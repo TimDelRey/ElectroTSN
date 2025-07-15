@@ -8,17 +8,25 @@ document.addEventListener('turbo:load', function() {
   const dayStyle = $('#style-day')[0];
   const nightStyle = $('#style-night')[0];
 
-  button.off ('click').on ('click', function() {
-    const isDay = nightStyle.disabled;
-    
-    if (isDay) {
-      dayStyle.disabled = true;
-      nightStyle.disabled = false;
-    } else {
+  let themeNow = localStorage.getItem('theme');
+
+  function applyTheme(themeNow) {
+    if (themeNow === 'day') {
       dayStyle.disabled = false;
       nightStyle.disabled = true;
+      button.text('Темная тема');
+    } else {
+      dayStyle.disabled = true;
+      nightStyle.disabled = false;
+      button.text('Светлая тема');
     }
-    
-    button.text(isDay ? 'Светлая тема' : 'Темная тема');
+  }
+
+  applyTheme(themeNow);
+
+  button.off ('click').on ('click', function() {
+    themeNow = themeNow === 'day' ? 'night' : 'day';
+    localStorage.setItem('theme', themeNow);
+    applyTheme(themeNow);
   })
 })
