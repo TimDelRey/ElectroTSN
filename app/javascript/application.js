@@ -2,3 +2,5 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "users/profiles/profile_form"
+import "welcome/index"
+import "layouts/for_application"

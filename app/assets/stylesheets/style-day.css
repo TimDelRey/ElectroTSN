@@ -69,3 +69,34 @@ h1 a {
   text-decoration: none;
   color: inherit;
 }
+
+button {
+  background-color: #f0f0f0;
+  color: #333333;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+a.button-link {
+  display: inline-block;
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 16px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+a.button-link:hover {
+  background-color: #2980b9;
+}
+
