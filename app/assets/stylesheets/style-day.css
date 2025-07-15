@@ -69,3 +69,18 @@ h1 a {
   text-decoration: none;
   color: inherit;
 }
+
+button {
+  background-color: #f0f0f0; /* светлый фон */
+  color: #333333;           /* темный текст */
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem; /* добавь, если надо */
+}
+
+button:hover {
+  background-color: #ddd;
+}

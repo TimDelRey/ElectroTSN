@@ -1,0 +1,88 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+header {
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+  padding: 1.5em 1em;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #ffffff;
+}
+
+nav {
+  margin-top: 0.5em;
+}
+
+nav a {
+  color: #82aaff;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #bb86fc;
+  text-decoration: underline;
+}
+
+main {
+  max-width: 960px;
+  margin: 2em auto;
+  padding: 2em;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  color: #888888;
+  font-size: 0.9em;
+  background-color: #1f1f1f;
+}
+
+.notice {
+  padding: 0.8em;
+  margin-bottom: 1em;
+  background-color: #27492d; /* темно-зеленый фон */
+  color: #a3dca3;           /* светло-зеленый текст */
+  border-left: 5px solid #a3dca3;
+}
+
+.alert {
+  padding: 0.8em;
+  margin-bottom: 1em;
+  background-color: #5a1a1a; /* темно-красный фон */
+  color: #f28b8b;            /* светло-красный текст */
+  border-left: 5px solid #f28b8b;
+}
+
+h1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background-color: #333333;
+  color: #e0e0e0;
+  border: 1px solid #555555;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #555555;
+}
