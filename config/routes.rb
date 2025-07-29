@@ -10,9 +10,14 @@ Rails.application.routes.draw do
 
   resources :tariffs, only: :index
 
-  # resources :receipts, only: [:index, :show] do
-  #   member do
-  #     get :download
-  #   end
-  # end
+  # удалить :index когда будет ручка показаний
+  resources :receipts, only: [:index] do
+    get :download, on: :member
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :receipts, only: :create
+    end
+  end
 end
