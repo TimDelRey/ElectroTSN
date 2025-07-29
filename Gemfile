@@ -45,6 +45,7 @@ gem 'trestle', '~> 0.10.1'
 gem 'trestle-auth', ' ~> 0.5.0'
 gem 'trestle-search', '~> 0.5.0.filters', git: 'https://github.com/TrestleAdmin/trestle-search', branch: 'filters'
 gem 'devise'
+gem 'cancancan'
 
 # xls, csv
 gem 'caxlsx' # read/write

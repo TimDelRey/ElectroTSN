@@ -1,6 +1,6 @@
 class ReceiptsController < Users::BaseController
 
-  # удалить экшн когда будет index/download_receipt всех показаний юзера
+  # в интерфейсе будет перечень показаний за месяца и рядом кнопка загрузки квитанции поэтому index и show не нужны
   def index
     @receipts = Receipt.signed_receipts_for_user(current_user)
     render json: @receipts
