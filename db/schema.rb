@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_09_143111) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_29_161205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,13 +43,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_143111) do
   end
 
   create_table "indications", force: :cascade do |t|
-    t.float "reading", null: false
     t.integer "user_id", null: false
     t.string "tariff_type", null: false
     t.date "for_month", null: false
     t.boolean "is_correct", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "day_time_reading"
+    t.float "night_time_reading"
+    t.float "all_day_reading"
   end
 
   create_table "receipts", force: :cascade do |t|

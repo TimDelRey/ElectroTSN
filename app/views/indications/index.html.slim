@@ -1,2 +1,17 @@
-h1 Indications#index
-p Find me in app/views/indications/index.html.slim
+h1 История показания
+/ = link_to 'Назад', root_path, class: 'btn btn-secondary', style: 'margin-left: 10px;'
+
+table.table.table-bordered
+  tr
+    th Месяц
+    th Показания Т1
+    th Показания Т2
+    th Однотарифные показания
+    
+  - @indications.each do |indication|
+    tr
+      td = indication.for_month
+      td = indication.day_time_reading
+      td = indication.night_time_reading
+      td = indication.all_day_reading
+

@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "indications/index"
-  get "indications/show"
-  get "indications/create"
   root to: 'welcome#index'
 
   devise_for :users, controllers: { registrations: 'custom_devise/registrations' }
@@ -21,8 +18,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :receipts, only: :create
+      resources :indications, only: :show
     end
   end
 
-  resources :indications, only: [:index, :create]
+  resources :indications, only: [:index, :create] do
+    get :collective_per_month
+    post :new_month_for_collective
+  end
 end

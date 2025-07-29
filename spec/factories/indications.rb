@@ -2,14 +2,16 @@
 #
 # Table name: indications
 #
-#  id          :bigint           not null, primary key
-#  for_month   :date             not null
-#  is_correct  :boolean          default(TRUE)
-#  reading     :float            not null
-#  tariff_type :string           not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  user_id     :integer          not null
+#  id                 :bigint           not null, primary key
+#  all_day_reading    :float
+#  day_time_reading   :float
+#  for_month          :date             not null
+#  is_correct         :boolean          default(TRUE)
+#  night_time_reading :float
+#  tariff_type        :string           not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  user_id            :integer          not null
 #
 FactoryBot.define do
   factory :indication do
