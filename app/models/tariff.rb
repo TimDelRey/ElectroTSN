@@ -15,10 +15,7 @@
 #  updated_at        :datetime         not null
 #
 class Tariff < ApplicationRecord
-  has_many :indications
-
   scope :default_tariff, -> { where(is_default: true) }
-  # scope :latest_per_title, -> { select('DISTINCT ON (title) *').order('title, updated_at DESC') }
 
   validate :only_one_default_tariff
 
@@ -27,7 +24,7 @@ class Tariff < ApplicationRecord
   def only_one_default_tariff
     existing_default = Tariff.where(title: title, is_default: true).where.not(id: id)
     if existing_default.exists?
-      errors.add(:is_default, "можно выбрать только один дефолтный тариф для '#{title}'")
+      errors.add(:is_default, "Можно выбрать только один дефолтный тариф для '#{title}'")
     end
   end
 end

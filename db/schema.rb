@@ -43,30 +43,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_002913) do
   end
 
   create_table "indications", force: :cascade do |t|
-    t.float "reading", null: false
-    t.integer "user_id", null: false
-    t.string "tariff_type", null: false
+    t.bigint "user_id", null: false
+    t.float "day_time_reading"
+    t.float "night_time_reading"
+    t.float "all_day_reading"
+    t.date "for_month", default: -> { "CURRENT_DATE" }, null: false
+    t.boolean "is_correct"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_indications_on_user_id"
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.boolean "signed", default: true
-    t.text "receipt_instance"
+    t.bigint "user_id", null: false
+    t.boolean "signed"
+    t.date "for_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 
   create_table "tariffs", force: :cascade do |t|
     t.string "title", null: false
     t.text "discription"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.boolean "is_default"
     t.float "first_step_value"
     t.float "second_step_value"
     t.float "third_step_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -74,7 +79,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_002913) do
     t.string "name"
     t.string "last_name"
     t.integer "place_number", null: false
-    t.string "users_tariff"
+    t.string "tariff"
+    t.integer "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", default: "", null: false
@@ -88,4 +94,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_002913) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "indications", "users"
+  add_foreign_key "receipts", "users"
 end

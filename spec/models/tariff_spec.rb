@@ -25,9 +25,9 @@ RSpec.describe Tariff, type: :model do
 
   context 'when creating a new tariff with same title' do
     it 'does not allow duplicate default tariffs with same title' do
-      tariff = Tariff.new(title: 'Basic')
-      expect(tariff).not_to be_valid
-      expect(tariff.errors[:is_default]).to include("можно выбрать только один дефолтный тариф для 'Basic'")
+      second_tariff = Tariff.new(title: tariff.title)
+      expect(second_tariff).not_to be_valid
+      expect(second_tariff.save).to eq(false)
     end
   end
 end

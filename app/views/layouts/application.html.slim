@@ -24,6 +24,7 @@ html
             - if user_signed_in?
               td = link_to 'Личный кабинет', profile_path, class: 'button-link'
               td = button_to 'Выход', destroy_user_session_path, method: :delete, data: { confirm: "Вы уверены, что хотите выйти?" }, class: "logout-button"
+              td = link_to 'Завести новый месяц', new_collective_moderators_indications_path, class: 'button-link'
             - else
               td = link_to 'Вход', new_user_session_path
               td = link_to 'Регистрация', new_user_registration_path

@@ -5,14 +5,36 @@ Rails.application.routes.draw do
 
   namespace :users, path: '', as: '' do
     resource :profile, only: [:show, :edit, :update], shallow: true
-    # get :receipts, to 'some#user_receipts'
   end
 
   resources :tariffs, only: :index
 
-  # resources :receipts, only: [:index, :show] do
-  #   member do
-  #     get :download
-  #   end
-  # end
+  # удалить :index когда будет ручка показаний
+  resources :receipts, only: [:index, :show] do
+    get :download, on: :member
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :receipts, only: :create
+      resources :indications, only: [] do
+        collection do
+          get :show_person
+          get :show_month_collective
+        end
+      end
+    end
+  end
+
+  namespace :moderators do
+    resources :indications, only: [:new, :create, :edit, :update, :show] do
+      collection do
+        get :new_collective
+        post :create_collective
+        post :confirm_month
+        get :new_reset_electricity_meter
+        post :create_reset_electricity_meter
+      end
+    end
+  end
 end

@@ -1,0 +1,30 @@
+= form_with url: create_collective_moderators_indications_path, method: :post, local: true do
+  - months = (1..@months.to_i).map { |i| i.months.ago.to_date.beginning_of_month }.reverse
+  - current_month = Date.today.beginning_of_month
+
+  button 'stimulus кнопка которая дернет текущую ручку с ?months=another'
+  table
+    thead
+      tr
+        th(rowspan="2") Пользователь
+        th(rowspan="2") Участок №
+        th(colspan=@months) Прошлые месяцы
+        th Новый месяц
+      tr
+        - months.each do |month|
+          th = month_name(month)
+        th = month_name(Date.today)
+
+    tbody
+      - @user_recent_indication.each do |user, indications|
+        - collection = IndicationCollection.new(indications)
+        tr
+          td = link_to user.full_name, moderators_indication_path(user), class: "btn"
+          td = user.place_number
+
+          - months.each do |month|
+            td = render_indication_value(collection.for_month(month), user)
+
+          td = render_indication_input(user, collection.current(current_month))
+
+  = submit_tag 'Сохранить все', class: "btn"
