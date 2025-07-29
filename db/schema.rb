@@ -52,10 +52,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_143111) do
 
   create_table "receipts", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.boolean "signed", default: true
+    t.boolean "signed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "receipt_url"
     t.date "for_month"
   end
 

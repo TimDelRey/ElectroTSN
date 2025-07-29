@@ -493,6 +493,7 @@ DEPENDENCIES
   pg
   propshaft
   puma (>= 5.0)
+  rack
   rails (~> 8.0.1)
   redis
   rspec-rails
