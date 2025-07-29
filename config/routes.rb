@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "indications/index"
+  get "indications/show"
+  get "indications/create"
   root to: 'welcome#index'
 
   devise_for :users, controllers: { registrations: 'custom_devise/registrations' }
@@ -20,4 +23,6 @@ Rails.application.routes.draw do
       resources :receipts, only: :create
     end
   end
+
+  resources :indications, only: [:index, :create]
 end

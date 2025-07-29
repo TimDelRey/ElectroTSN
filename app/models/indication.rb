@@ -5,6 +5,8 @@
 # Table name: indications
 #
 #  id          :bigint           not null, primary key
+#  for_month   :date             not null
+#  is_correct  :boolean          default(TRUE)
 #  reading     :float            not null
 #  tariff_type :string           not null
 #  created_at  :datetime         not null

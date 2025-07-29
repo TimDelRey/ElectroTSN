@@ -46,6 +46,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_143111) do
     t.float "reading", null: false
     t.integer "user_id", null: false
     t.string "tariff_type", null: false
+    t.date "for_month", null: false
+    t.boolean "is_correct", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
