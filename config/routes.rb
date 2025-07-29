@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :tariffs, only: :index
-  
+
   # удалить :index когда будет ручка показаний
   resources :receipts, only: [:index] do
     get :download, on: :member

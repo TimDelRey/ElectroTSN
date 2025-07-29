@@ -32,5 +32,4 @@ RSpec.describe "Receipts", type: :request do
       end
     end
   end
-
 end

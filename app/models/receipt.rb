@@ -15,7 +15,7 @@ class Receipt < ApplicationRecord
   belongs_to :user
   has_one_attached :xls_file, dependent: :purge_later
 
-  scope :signed_receipts_for_user, -> (user) { Receipt.where(user: user, signed: true).order(for_month: :desc) }
+  scope :signed_receipts_for_user, ->(user) { Receipt.where(user: user, signed: true).order(for_month: :desc) }
 
   validate :only_one_signed_receipt_for_month, on: :create
 

@@ -2,7 +2,7 @@ module Api
   module V1
     class ReceiptsController < Users::BaseController
       protect_from_forgery with: :null_session
-        
+
       def create
         @receipt = current_user.receipts.create(receipt_params)
 
@@ -17,7 +17,7 @@ module Api
 
       def receipt_params
         permited = params.permit(:for_month, :receipt_url, :signed)
-        
+
         permited[:for_month] = Date.today if permited[:for_month].blank?
         permited[:signed] = true if permited[:signed].blank?
 
