@@ -1,0 +1,18 @@
+h1 Актуальные тарифы
+/ = link_to 'Назад', root_path, class: 'btn btn-secondary', style: 'margin-left: 10px;'
+
+table.table.table-bordered
+  thead
+    tr
+      th Название
+      th Стоимость до 150 кВт⋅ч (₽/кВт⋅ч)
+      th Стоимость от 151 кВт⋅ч до 600 кВт⋅ч (₽/кВт⋅ч)
+      th Стоимость более 600кВт⋅ч (₽/кВт⋅ч)
+      th Описание
+  tbody
+    tr
+      td = @tariff.title
+      td = number_with_precision(@tariff.first_step_value, precision: 2)
+      td = number_with_precision(@tariff.second_step_value, precision: 2)
+      td = number_with_precision(@tariff.third_step_value, precision: 2)
+      td = @tariff.discription.presence || '-'
