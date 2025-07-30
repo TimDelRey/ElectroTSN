@@ -1,0 +1,16 @@
+= form_with(model: @indication, local: true, html: { multipart: true }) do |form|
+  .field
+    = form.label :for_month, 'Месяц'
+    br
+    = form.date_field :for_month
+
+  h2 Показания
+  table
+    tr 
+      th Предыдущий месяц
+      th Текущий месяц
+    tr
+      td = @last_indication.all_day_reading || 'Показания не найдены'
+      td = form.number_field :all_day_reading, step: :any
+    
+  = form.submit 'Передать', class: "btn"

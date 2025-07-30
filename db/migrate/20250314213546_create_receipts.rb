@@ -1,9 +1,9 @@
 class CreateReceipts < ActiveRecord::Migration[8.0]
   def change
     create_table :receipts do |t|
-      t.integer :user_id, null: false
+      t.references :user, null: false, foreign_key: true
       t.boolean :signed
-      t.text :receipt_instance
+      t.date :for_month
 
       t.timestamps
     end

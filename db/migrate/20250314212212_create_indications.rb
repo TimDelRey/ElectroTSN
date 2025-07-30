@@ -1,10 +1,11 @@
 class CreateIndications < ActiveRecord::Migration[8.0]
   def change
     create_table :indications do |t|
-      t.float :reading, null: false
-      t.integer :user_id, null: false
-      t.string :tariff_type, null: false
-      t.date :for_month, null: false
+      t.references :user, null: false, foreign_key: true
+      t.float :day_time_reading
+      t.float :night_time_reading
+      t.float :all_day_reading
+      t.date :for_month, null: false, default: -> { 'CURRENT_DATE' }
       t.boolean :is_correct, default: true
 
       t.timestamps

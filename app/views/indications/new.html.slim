@@ -1,0 +1,6 @@
+h1 Новые показания
+
+- if @user.tariff == 'mono'
+  = render "form_mono_tariff", indication: @indication
+- else
+  = render "form_duo_tariff", indication: @indication
