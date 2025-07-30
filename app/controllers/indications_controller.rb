@@ -2,7 +2,6 @@ class IndicationsController < Users::BaseController
   def index
     @user = current_user
     @indications = Indication.actual(@user).where(user: @user)
-    # render json: indications
   end
 
   def new
@@ -13,10 +12,14 @@ class IndicationsController < Users::BaseController
 
   def create
     @indication = Indication.new(indication_params)
+    @indication.user = current_user
+
     if @indication.save
-      render :index, status: :created
+      redirect_to indications_path, notice: 'Показания сохранены'
     else
-      render json: @indication.errors, status: :unprocessable_entity
+      @user = current_user
+      @last_indication = Indication.actual(@user).first
+      render :new, status: :unprocessable_entity
     end
   end
 

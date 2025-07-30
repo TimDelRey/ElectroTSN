@@ -1,5 +1,6 @@
-h1 Новые показания
+h1 Новые показания по тарифу #{@user.tariff}
 
+= form_errors_for(@indication)
 - if @user.tariff == 'mono'
   = render "form_mono_tariff", indication: @indication
 - else

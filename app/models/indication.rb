@@ -29,13 +29,13 @@ class Indication < ApplicationRecord
   scope :actual, ->(user) { Indication.where(user: user, is_correct: true).order(for_month: :desc) }
 
   # validate :correct_reeding_for_user_tariff
-  # validate :one_tariff
+  # validate :one_correct_tariff_per_month
 
   private
 
   def correct_reeding_for_user_tariff
   end
 
-  def one_tariff
+  def one_correct_tariff_per_month
   end
 end

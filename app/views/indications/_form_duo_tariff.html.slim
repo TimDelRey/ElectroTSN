@@ -1,22 +1,22 @@
-= form_with(model: [@last_indication @indication], local: true, html: { multipart: true }) do |form|
+= form_with(model: @indication, local: true, html: { multipart: true }) do |form|
   .field
     = form.label :for_month, 'Месяц'
     br
-    = form.date_field :for_month
+    = form.select :for_month,
+      options_for_select(month_options, @indication.for_month || Date.current.beginning_of_month)
 
   table
     tr 
       th Зона тарифа
       th Предыдущий месяц
       th Текущий месяц
-  .field
-    = form.label :day_time_reading, 'Дневные показания Т1'
-    br
-    = form.number_field :day_time_reading, step: :any
-
-  .field
-    = form.label :night_time_reading, 'Ночные показания Т2'
-    br
-    = form.number_field :night_time_reading, step: :any
+    tr
+      td = form.label :day_time_reading, 'Дневные показания Т1'
+      td = @last_indication.day_time_reading || 'Показания не найдены'
+      td = form.number_field :day_time_reading, step: :any
+    tr
+      td = form.label :night_time_reading, 'Ночные показания Т2'
+      td = @last_indication.night_time_reading || 'Показания не найдены'
+      td = form.number_field :night_time_reading, step: :any
 
   = form.submit 'Создать', class: "btn"
