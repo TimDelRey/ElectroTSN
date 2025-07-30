@@ -8,7 +8,6 @@
 #  for_month          :date             not null
 #  is_correct         :boolean          default(TRUE)
 #  night_time_reading :float
-#  tariff_type        :string           not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  user_id            :integer          not null

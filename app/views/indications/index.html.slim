@@ -10,7 +10,8 @@ table.table.table-bordered
     
   - @indications.each do |indication|
     tr
-      td = indication.for_month
+      / td = indication.for_month.month
+      td = month_name(indication.for_month)
       td = indication.day_time_reading
       td = indication.night_time_reading
       td = indication.all_day_reading

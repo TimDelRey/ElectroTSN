@@ -1,8 +1,8 @@
 class IndicationsController < Users::BaseController
   def index
     @user = current_user
-    indications = Indication.actual(@user).find(@user.id)
-    render json: indications
+    @indications = Indication.actual(@user).where(user: @user)
+    # render json: indications
   end
 
   def new
