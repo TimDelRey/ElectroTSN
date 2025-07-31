@@ -28,3 +28,26 @@ all_day_tariff_first_half_of_year, all_day_tariff_second_half_of_year = Tariff.c
     discription: 'ООО "Севэнергосбыт". С учётом НДС 20% (Приказ Управления по тарифам г. Севастополя от 09.12.2024 г. № 185-УТ)'
   }
 ])
+
+user1, user2 = User.create!([
+  {
+    email: 'mono@example.com',
+    password: '123456',
+    password_confirmation: '123456',
+    first_name: 'Первый',
+    name: 'Перваш',
+    last_name: 'Первович',
+    place_number: 101,
+    tariff: 'Однотарифный'
+  },
+  {
+    email: 'duo@example.com',
+    password: '123456',
+    password_confirmation: '123456',
+    first_name: 'Второй',
+    name: 'Вториш',
+    last_name: 'Вторович',
+    place_number: 102,
+    tariff: 'Двухтарифный'
+  }
+])

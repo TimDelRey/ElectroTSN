@@ -33,7 +33,7 @@ class User < ApplicationRecord
   validates :place_number, presence: true
 
   MONO_TARIFFS = [
-    'моно', 'mono', 'однотарифный', 'solo', 'соло'
+    'моно', 'mono', 'однотарифный', 'solo', 'соло', 'одноставочный'
   ].freeze
 
   def tariff_mono?

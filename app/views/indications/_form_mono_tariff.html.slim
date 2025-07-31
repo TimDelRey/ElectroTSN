@@ -10,7 +10,7 @@
       th Предыдущий месяц
       th Текущий месяц
     tr
-      td = @last_indication.all_day_reading || 'Показания не найдены'
-      td = form.number_field :all_day_reading, step: :any
+      td = previous_all_day_reading(@last_indication)
+      td = form.number_field :all_day_reading, step: :any, placeholder: "Введите значение"
     
   = form.submit 'Передать', class: "btn"
