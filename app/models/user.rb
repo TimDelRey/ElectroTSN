@@ -31,4 +31,12 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true
   validates :place_number, presence: true
+
+  MONO_TARIFFS = [
+    'моно', 'mono', 'однотарифный', 'solo', 'соло'
+  ].freeze
+
+  def tariff_mono?
+    MONO_TARIFFS.include?(tariff.to_s.downcase)
+  end
 end

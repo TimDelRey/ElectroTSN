@@ -24,7 +24,6 @@
 #
 class Indication < ApplicationRecord
   belongs_to :user
-  # belongs_to :tariff
 
   scope :actual, ->(user) { Indication.where(user: user, is_correct: true).order(for_month: :desc) }
 
