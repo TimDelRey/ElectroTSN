@@ -2,7 +2,8 @@
   .field
     = form.label :for_month, 'Месяц'
     br
-    = form.date_field :for_month
+    = form.select :for_month,
+      options_for_select(month_options, @indication.for_month || Date.current.beginning_of_month)
 
   h2 Показания
   table
