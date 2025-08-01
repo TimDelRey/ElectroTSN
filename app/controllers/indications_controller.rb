@@ -23,7 +23,7 @@ class IndicationsController < Users::BaseController
     end
   end
 
-  def collective_per_month
+  def show_month_of_collective
   end
 
   def new_month_for_collective

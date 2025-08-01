@@ -27,14 +27,31 @@ class Indication < ApplicationRecord
 
   scope :actual, ->(user) { Indication.where(user: user, is_correct: true).order(for_month: :desc) }
 
-  # validate :correct_reeding_for_user_tariff
-  # validate :one_correct_tariff_per_month
+  validate :correct_reading_of_user_tariff
+  validate :one_correct_tariff_per_month
+  # validate: indication_now_not_less_previous
 
   private
 
-  def correct_reeding_for_user_tariff
+  def correct_reading_of_user_tariff
+    if user.tariff_mono?
+      errors.add("Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
+    else
+      errors.add("Введены показания не по плану #{user.tariff}") if all_day_reading.present?
+    end
   end
 
   def one_correct_tariff_per_month
+    existing_correct = Indication.where.not(id: id).where(
+      user: user,
+      is_correct: true,
+      for_month: for_month.beginning_of_month..for_month.end_of_month
+    )
+    if existing_correct.exists?
+      errors.add("Отмените существующие показания за текущий месяц")
+    end
+  end
+
+  def indication_now_not_less_previous
   end
 end
