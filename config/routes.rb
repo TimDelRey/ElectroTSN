@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   end
 
   resources :indications, only: [:index, :new, :create] do
-    get :show_month_of_collective 
+    get :show_month_of_collective
     post :new_month_for_collective
   end
 end

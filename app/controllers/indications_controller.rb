@@ -29,6 +29,9 @@ class IndicationsController < Users::BaseController
   def new_month_for_collective
   end
 
+  def reset_electricity_meter
+  end
+
   private
 
   def indication_params

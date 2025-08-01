@@ -29,7 +29,7 @@ class Indication < ApplicationRecord
 
   validate :correct_reading_of_user_tariff
   validate :one_correct_tariff_per_month
-  # validate: indication_now_not_less_previous
+  validate :indication_now_not_less_previous
 
   private
 
@@ -53,5 +53,22 @@ class Indication < ApplicationRecord
   end
 
   def indication_now_not_less_previous
+    previous_month = for_month.prev_month.beginning_of_month
+    previous_indication = Indication.where(user: user, is_correct: true, for_month: previous_month).first
+    return if previous_indication.nil?
+
+    if user.tariff_mono?
+      if all_day_reading.present? && previous_indication.all_day_reading.present? && all_day_reading < previous_indication.all_day_reading
+        errors.add("Показания не могут быть меньше показаний предыдущего месяца")
+      end
+    else
+      if day_time_reading.present? && previous_indication.day_time_reading.present? && day_time_reading < previous_indication.day_time_reading
+        errors.add("Дневные показания не могут быть меньше показаний предыдущего месяца")
+      end
+
+      if night_time_reading.present? && previous_indication.night_time_reading.present? && night_time_reading < previous_indication.night_time_reading
+        errors.add("Ночные показания не могут быть меньше показаний предыдущего месяца")
+      end
+    end
   end
 end
