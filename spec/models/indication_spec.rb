@@ -26,7 +26,7 @@ RSpec.describe Indication, type: :model do
   let(:duo_user) { create(:user, tariff: 'duo') }
   let(:previous_month) { Date.today - 1.month }
 
-  subject { build(:indication, user: user) }
+  subject { create(:indication, user: user) }
 
   describe 'testing mono indication' do
     let(:user) { create(:user, tariff: 'mono') }
@@ -59,11 +59,20 @@ RSpec.describe Indication, type: :model do
 
     context 'when indication is different users tariff' do
       it 'indication wasnt saved' do
+        subject.day_time_reading = 101
+        subject.night_time_reading = 102
+
+        expect(subject).not_to be_valid
+        expect(subject.save).to eq(false)
       end
     end
 
     context 'when 2 indication/month has is_correct mark' do
       it 'indication wasnt saved' do
+        create(:indication, user: user, is_correct: true, for_month: Date.today)
+
+        expect(subject).not_to be_valid
+        expect(subject.save).to eq(false)
       end
     end
 
