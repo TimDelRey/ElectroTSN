@@ -36,9 +36,9 @@ class Indication < ApplicationRecord
 
   def readings_correspond_to_tariff
     if user.tariff_mono?
-      errors.add("Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
+      errors.add(:base, "Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
     else
-      errors.add("Введены показания не по плану #{user.tariff}") if all_day_reading.present?
+      errors.add(:base, "Введены показания не по плану #{user.tariff}") if all_day_reading.present?
     end
   end
 
@@ -51,28 +51,28 @@ class Indication < ApplicationRecord
       for_month: for_month.beginning_of_month..for_month.end_of_month
     )
     if existing_correct.exists?
-      errors.add("Отмените существующие показания за текущий месяц")
+      errors.add(:base, "Отмените существующие показания за текущий месяц")
     end
   end
 
   def indication_now_bigger_previous
     return if for_month.blank?
-    
-    previous_month = for_month.prev_month.beginning_of_month
-    previous_indication = Indication.where(user: user, is_correct: true, for_month: previous_month).first
+
+    previous_month_range = for_month.prev_month.beginning_of_month..for_month.prev_month.end_of_month
+    previous_indication = Indication.where(user: user, is_correct: true, for_month: previous_month_range).order(for_month: :desc).first
     return if previous_indication.nil?
 
     if user.tariff_mono?
       if all_day_reading.present? && previous_indication.all_day_reading.present? && all_day_reading < previous_indication.all_day_reading
-        errors.add("Показания не могут быть меньше показаний предыдущего месяца")
+        errors.add(:base, "Показания не могут быть меньше показаний предыдущего месяца")
       end
     else
       if day_time_reading.present? && previous_indication.day_time_reading.present? && day_time_reading < previous_indication.day_time_reading
-        errors.add("Дневные показания не могут быть меньше показаний предыдущего месяца")
+        errors.add(:base, "Дневные показания не могут быть меньше показаний предыдущего месяца")
       end
 
       if night_time_reading.present? && previous_indication.night_time_reading.present? && night_time_reading < previous_indication.night_time_reading
-        errors.add("Ночные показания не могут быть меньше показаний предыдущего месяца")
+        errors.add(:base, "Ночные показания не могут быть меньше показаний предыдущего месяца")
       end
     end
   end

@@ -23,19 +23,18 @@
 require 'rails_helper'
 
 RSpec.describe Indication, type: :model do
-  let(:duo_user) { create(:user, tariff: 'duo') }
-  let(:previous_month) { Date.today - 1.month }
-
-  subject { create(:indication, user: user) }
+  # let(:duo_user) { create(:user, tariff: 'duo') }
 
   describe 'testing mono indication' do
-    let(:user) { create(:user, tariff: 'mono') }
-    let!(:previous_indication) { create(:indication, for_month: previous_month, all_day_reading: 50, user: user) }
+    let!(:user) { create(:user, tariff: 'mono') }
+    let!(:previous_indication) { create(:indication, for_month: Date.today - 1.month, all_day_reading: 50, user: user) }
+
+    subject { build(:indication, user: user) }
 
     context 'when valid indication' do
       it 'indication now bigger than previous is saved' do
         subject.all_day_reading = 100
-        
+
         expect(subject).to be_valid
         expect(subject.save).to eq(true)
 
@@ -45,11 +44,12 @@ RSpec.describe Indication, type: :model do
         expect(subject.for_month).to eq(Date.today)
         expect(subject.is_correct).to eq(true)
         expect(subject.user).to eq(user)
+        expect(subject.all_day_reading).to be > previous_indication.all_day_reading
       end
     end
 
-    context 'when invalid indication' do
-      it 'indication wasnt saved' do
+    context 'when invalid data' do
+      it 'indication is not saved' do
         subject.all_day_reading = 'beskonechnot ne predel!!!'
 
         expect(subject).not_to be_valid
@@ -58,7 +58,7 @@ RSpec.describe Indication, type: :model do
     end
 
     context 'when indication is different users tariff' do
-      it 'indication wasnt saved' do
+      it 'indication is not saved' do
         subject.day_time_reading = 101
         subject.night_time_reading = 102
 
@@ -68,7 +68,7 @@ RSpec.describe Indication, type: :model do
     end
 
     context 'when 2 indication/month has is_correct mark' do
-      it 'indication wasnt saved' do
+      it 'indication is not saved' do
         create(:indication, user: user, is_correct: true, for_month: Date.today)
 
         expect(subject).not_to be_valid
@@ -76,8 +76,13 @@ RSpec.describe Indication, type: :model do
       end
     end
 
-    context 'when indication now less previous' do
-      it 'indication wasnt saved' do
+    context 'when the indication is now less than the previous ones' do
+      it 'indication is not saved' do
+        subject.all_day_reading = 10
+
+        expect(subject).not_to be_valid
+        expect(subject.save).to eq(false)
+        expect(subject.all_day_reading).to be < previous_indication.all_day_reading
       end
     end
   end
