@@ -23,5 +23,53 @@
 require 'rails_helper'
 
 RSpec.describe Indication, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:duo_user) { create(:user, tariff: 'duo') }
+  let(:previous_month) { Date.today - 1.month }
+
+  subject { build(:indication, user: user) }
+
+  describe 'testing mono indication' do
+    let(:user) { create(:user, tariff: 'mono') }
+    let!(:previous_indication) { create(:indication, for_month: previous_month, all_day_reading: 50, user: user) }
+
+    context 'when valid indication' do
+      it 'indication now bigger than previous is saved' do
+        subject.all_day_reading = 100
+        
+        expect(subject).to be_valid
+        expect(subject.save).to eq(true)
+
+        expect(subject.all_day_reading).to eq(100)
+        expect(subject.day_time_reading).to be_nil
+        expect(subject.night_time_reading).to be_nil
+        expect(subject.for_month).to eq(Date.today)
+        expect(subject.is_correct).to eq(true)
+        expect(subject.user).to eq(user)
+      end
+    end
+
+    context 'when invalid indication' do
+      it 'indication wasnt saved' do
+        subject.all_day_reading = 'beskonechnot ne predel!!!'
+
+        expect(subject).not_to be_valid
+        expect(subject.save).to eq(false)
+      end
+    end
+
+    context 'when indication is different users tariff' do
+      it 'indication wasnt saved' do
+      end
+    end
+
+    context 'when 2 indication/month has is_correct mark' do
+      it 'indication wasnt saved' do
+      end
+    end
+
+    context 'when indication now less previous' do
+      it 'indication wasnt saved' do
+      end
+    end
+  end
 end

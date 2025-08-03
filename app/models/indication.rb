@@ -7,7 +7,7 @@
 #  id                 :bigint           not null, primary key
 #  all_day_reading    :float
 #  day_time_reading   :float
-#  for_month          :date             not null
+#  for_month          :date             default: -> { "CURRENT_DATE" }, null: false
 #  is_correct         :boolean          default(TRUE)
 #  night_time_reading :float
 #  created_at         :datetime         not null
@@ -27,13 +27,14 @@ class Indication < ApplicationRecord
 
   scope :actual, ->(user) { Indication.where(user: user, is_correct: true).order(for_month: :desc) }
 
-  validate :correct_reading_of_user_tariff
-  validate :one_correct_tariff_per_month
-  validate :indication_now_not_less_previous
+  validate :readings_correspond_to_tariff
+  validate :only_one_correct_indication_per_month
+  validate :indication_now_bigger_previous
+  validates :all_day_reading, :day_time_reading, :night_time_reading, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   private
 
-  def correct_reading_of_user_tariff
+  def readings_correspond_to_tariff
     if user.tariff_mono?
       errors.add("Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
     else
@@ -41,7 +42,9 @@ class Indication < ApplicationRecord
     end
   end
 
-  def one_correct_tariff_per_month
+  def only_one_correct_indication_per_month
+    return if for_month.blank?
+
     existing_correct = Indication.where.not(id: id).where(
       user: user,
       is_correct: true,
@@ -52,7 +55,9 @@ class Indication < ApplicationRecord
     end
   end
 
-  def indication_now_not_less_previous
+  def indication_now_bigger_previous
+    return if for_month.blank?
+    
     previous_month = for_month.prev_month.beginning_of_month
     previous_indication = Indication.where(user: user, is_correct: true, for_month: previous_month).first
     return if previous_indication.nil?
