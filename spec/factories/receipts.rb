@@ -19,8 +19,7 @@
 #
 FactoryBot.define do
   factory :receipt do
-    user_id { 1 }
+    association :user
     signed { false }
-    receipt_instance { "csv-url to s3 must be here" }
   end
 end
