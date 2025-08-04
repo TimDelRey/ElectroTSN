@@ -1,0 +1,22 @@
+h1 Показания потребителя #{@user.first_name} #{@user.name} #{@user.last_name}
+
+button 'stimulus кнопка которая дернет текущую ручку с ?months=another'
+table.table.table-bordered
+  tr
+    th colspan="2" Дата
+    th Показания Т1
+    th Показания Т2
+    th Однотарифные показания
+    th Верно?
+    
+  - @user_indications.each do |indication|
+    tr
+      td = indication.for_month.year
+      td = month_name(indication.for_month)
+      td = indication.day_time_reading
+      td = indication.night_time_reading
+      td = indication.all_day_reading
+      - if indication.is_correct
+        td = '✅'
+      - else
+        td = '❌'

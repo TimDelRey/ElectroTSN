@@ -22,8 +22,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :indications, only: [:index, :new, :create] do
-    get :show_month_of_collective
-    post :new_month_for_collective
+  resources :indications, only: [:index, :new, :create, :show] do
+    collection do
+      get :new_collective
+      post :create_collective
+    end
   end
 end

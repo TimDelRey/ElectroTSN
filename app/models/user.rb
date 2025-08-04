@@ -39,4 +39,8 @@ class User < ApplicationRecord
   def tariff_mono?
     MONO_TARIFFS.include?(tariff.to_s.downcase)
   end
+
+  def full_name
+    [first_name, name, last_name].compact.join(' ')
+  end
 end

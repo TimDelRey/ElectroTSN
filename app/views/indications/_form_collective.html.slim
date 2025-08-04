@@ -1,0 +1,46 @@
+= form_with url: create_collective_indications_path, method: :post, local: true do
+  - months = (1..@months.to_i).map { |i| i.months.ago.to_date.beginning_of_month }.reverse
+  - current_month = Date.today.beginning_of_month
+
+  button 'stimulus кнопка которая дернет текущую ручку с ?months=another'
+  table
+    thead
+      tr
+        th(rowspan="2") Пользователь
+        th(rowspan="2") Участок №
+        th(colspan=@months) Прошлые месяцы
+        th Новый месяц
+      tr
+        - months.each do |month|
+          th = month_name(month)
+        th = month_name(Date.today)
+
+    tbody
+      - @user_recent_indication.each do |user, indications|
+        tr
+          td = link_to "#{user.full_name}", indication_path(user), class: "btn"
+          td = user.place_number
+          - months.each do |month|
+            - indication = indications.find { |i| i.for_month.beginning_of_month == month.beginning_of_month }
+            - if user.tariff_mono?
+              td= indication&.all_day_reading || "-"
+            - else
+              td
+                | Т1: #{indication&.day_time_reading || "-"}
+                br
+                | Т2: #{indication&.night_time_reading || "-"}
+
+          - current = indications.find { |i| i.for_month.beginning_of_month == current_month }
+
+          - if user.tariff_mono?
+            td
+              = number_field_tag "indications[#{user.id}][all_day_reading]", current&.all_day_reading, step: 0.1
+              / ДОЛЖНО ГОРЕТЬ КРАСНЫМ если ЕСТЬ ТЕКУЩИЙ МЕСЯЦ и УЖЕ СОДЕРЖИТ ПОКАЗАНИЯ С ОТМЕТКОЙ CORRECT 
+          - else
+            td
+              = number_field_tag "indications[#{user.id}][day_time_reading]", current&.day_time_reading, step: 0.1, placeholder: 'День'
+              | /
+              = number_field_tag "indications[#{user.id}][night_time_reading]", current&.night_time_reading, step: 0.1, placeholder: 'Ночь'
+
+
+  = submit_tag 'Сохранить все', class: "btn"

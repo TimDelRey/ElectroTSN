@@ -25,7 +25,11 @@
 class Indication < ApplicationRecord
   belongs_to :user
 
-  scope :actual, ->(user) { Indication.where(user: user, is_correct: true).order(for_month: :desc) }
+  scope :correct, -> { where(is_correct: true) }
+  scope :actual, ->(user) { correct.where(user: user).order(for_month: :desc) }
+  scope :for_recent_months, ->(n = 3) {
+    where(for_month: n.months.ago.beginning_of_month..Date.today.end_of_month)
+  }
 
   validate :readings_correspond_to_tariff
   validate :only_one_correct_indication_per_month
