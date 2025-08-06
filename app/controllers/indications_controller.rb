@@ -49,28 +49,43 @@ class IndicationsController < Users::BaseController
   end
 
   def create_collective
-    def create_collective
-      params[:indications]&.each do |user_id, readings|
-        user = User.find(user_id)
-        indication = user.indications.build(for_month: Date.current.beginning_of_month)
+    errors = []
 
-        if user.tariff_mono?
-          indication.all_day_reading = readings[:all_day_reading]
-        else
-          indication.day_time_reading = readings[:day_time_reading]
-          indication.night_time_reading = readings[:night_time_reading]
-        end
+    params[:indications]&.each do |user_id, indications|
+      user = User.find(user_id)
+      month_start = Date.current.beginning_of_month
 
-        unless indication.save
-          flash[:alert] ||= []
-          flash[:alert] << "Ошибка для пользователя #{user.first_name}: #{indication.errors.full_messages.to_sentence}"
-        end
+      day = indications[:day_time_reading].presence&.to_f
+      night = indications[:night_time_reading].presence&.to_f
+      all_day = indications[:all_day_reading].presence&.to_f
+
+      next if all_day.nil? && day.nil? && night.nil?
+
+      indication = user.indications.find_or_initialize_by(for_month: month_start)
+
+      if user.tariff_mono?
+        indication.all_day_reading = all_day
+      else
+        indication.day_time_reading ||= day
+        indication.night_time_reading ||= night
+
+        indication.day_time_reading = day unless day.nil?
+        indication.night_time_reading = night unless night.nil?
       end
 
-      redirect_to new_collective_month_indications_path, notice: "Показания сохранены"
+      unless indication.save
+        errors << "Ошибка для пользователя #{user.first_name}: #{indication.errors.full_messages.to_sentence}"
+      end
     end
 
+    if errors.any?
+      render :new_collective, status: :unprocessable_entity, notice: errors.join(", ")
+    else
+      redirect_to new_collective_indications_path, notice: 'Показания сохранены'
+    end
   end
+
+
 
   def reset_electricity_meter
   end

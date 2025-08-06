@@ -34,13 +34,17 @@
 
           - if user.tariff_mono?
             td
-              = number_field_tag "indications[#{user.id}][all_day_reading]", current&.all_day_reading, step: 0.1
-              / ДОЛЖНО ГОРЕТЬ КРАСНЫМ если ЕСТЬ ТЕКУЩИЙ МЕСЯЦ и УЖЕ СОДЕРЖИТ ПОКАЗАНИЯ С ОТМЕТКОЙ CORRECT 
+              = number_field_tag "indications[#{user.id}][all_day_reading]", nil,
+              step: 0.1,
+              placeholder: current&.all_day_reading || ''
           - else
             td
-              = number_field_tag "indications[#{user.id}][day_time_reading]", current&.day_time_reading, step: 0.1, placeholder: 'День'
+              = number_field_tag "indications[#{user.id}][day_time_reading]", nil,
+              step: 0.1,
+              placeholder: current&.day_time_reading || 'День'
               | /
-              = number_field_tag "indications[#{user.id}][night_time_reading]", current&.night_time_reading, step: 0.1, placeholder: 'Ночь'
-
+              = number_field_tag "indications[#{user.id}][night_time_reading]", nil,
+              step: 0.1,
+              placeholder: current&.night_time_reading || 'Ночь'
 
   = submit_tag 'Сохранить все', class: "btn"

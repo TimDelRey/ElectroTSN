@@ -25,6 +25,8 @@
 class Indication < ApplicationRecord
   belongs_to :user
 
+  after_initialize :set_default_for_month, if: :new_record?
+
   scope :correct, -> { where(is_correct: true) }
   scope :actual, ->(user) { correct.where(user: user).order(for_month: :desc) }
   scope :for_recent_months, ->(n = 3) {
@@ -37,6 +39,10 @@ class Indication < ApplicationRecord
   validates :all_day_reading, :day_time_reading, :night_time_reading, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   private
+
+  def set_default_for_month
+    self.for_month ||= Date.current
+  end
 
   def readings_correspond_to_tariff
     if user.tariff_mono?
