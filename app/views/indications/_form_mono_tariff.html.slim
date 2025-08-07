@@ -1,0 +1,17 @@
+= form_with(model: @indication, local: true, data: { turbo: false }, html: { multipart: true }) do |form|
+  .field
+    = form.label :for_month, 'Месяц'
+    br
+    = form.select :for_month,
+      options_for_select(month_options, @indication.for_month || Date.current.beginning_of_month)
+
+  h2 Показания
+  table
+    tr 
+      th Предыдущий месяц
+      th Текущий месяц
+    tr
+      td = previous_all_day_reading(@last_indication)
+      td = form.number_field :all_day_reading, step: :any, placeholder: "Введите значение"
+    
+  = form.submit 'Передать', class: "btn"

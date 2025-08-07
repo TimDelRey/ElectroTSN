@@ -5,7 +5,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :name
       t.string :last_name
       t.integer :place_number, null: false
-      t.string :users_tariff
+      t.string :tariff
 
       t.timestamps
     end

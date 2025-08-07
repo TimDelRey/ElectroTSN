@@ -11,13 +11,23 @@ Rails.application.routes.draw do
   resources :tariffs, only: :index
 
   # удалить :index когда будет ручка показаний
-  resources :receipts, only: [:index] do
+  resources :receipts, only: [:index, :show] do
     get :download, on: :member
   end
 
   namespace :api do
     namespace :v1 do
       resources :receipts, only: :create
+      resources :indications, only: :show
+    end
+  end
+
+  resources :indications, only: [:index, :new, :create, :show] do
+    get :calculate, on: :member
+    collection do
+      get :new_collective
+      post :create_collective
+      get :calculate_collective
     end
   end
 end

@@ -1,0 +1,6 @@
+h1 Ввод показаний за #{ month_name(Date.today).downcase }
+
+= link_to "Создать квитанции за #{ month_name(Date.today).downcase }", calculate_collective_indications_path, class: "btn"
+
+/ = form_errors_for(@user_recent_indication)
+= render "form_collective"
