@@ -85,7 +85,24 @@ class IndicationsController < Users::BaseController
     end
   end
 
+  def calculate
+    indication = Indication.find(params[:id])
+    render json: indication
+  end
 
+  def calculate_collective
+    user_recent_indication = {}
+
+    users = User.includes(:indications)
+    users.each do |user|
+      recent = user.indications.correct.where(for_month: Date.current.beginning_of_month..Date.current.end_of_month)
+      next if recent.blank?
+
+      user_recent_indication[user.id] = recent.as_json(only: [:id, :for_month, :day_time_reading, :night_time_reading, :all_day_reading])
+    end
+
+    render json: user_recent_indication
+  end
 
   def reset_electricity_meter
   end
