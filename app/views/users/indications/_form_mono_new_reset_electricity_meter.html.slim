@@ -1,21 +1,19 @@
 = form_with url: create_reset_electricity_meter_user_indications_path(@user), method: :post, local: true do |f|
+  = hidden_field_tag :user_id, @user.id
 
   h2 Обновление однотарифного счетчика
   table
-    tr 
+    tr
       th Предыдущие показания
       th Последние показания старого счетчика
       th Новое показание нового счетчика
     tr
       td = previous_all_day_reading(@last_indication)
 
-      = f.fields_for :last_indication_old_metter, @last_indication_old_metter do |i|
-        td
-          .field
-            = i.number_field :all_day_reading, step: 0.01
+      td
+        = number_field_tag "last_indication_old_metter[all_day_reading]", @last_indication_old_metter.all_day_reading, step: 0.01
 
-      = f.fields_for :new_indication_new_metter, @new_indication_new_metter do |i|
-        td
-          .field
-            = i.number_field :all_day_reading, step: 0.01
+      td
+        = number_field_tag "new_indication_new_metter[all_day_reading]", @new_indication_new_metter.all_day_reading, step: 0.01
+
   = f.submit 'Сохранить'

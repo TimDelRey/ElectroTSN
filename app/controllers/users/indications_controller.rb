@@ -11,15 +11,19 @@ module Users
     def create_reset_electricity_meter
       @user = User.find(params[:user_id])
 
-      # Создаем объекты Indication для каждого из 3-х типов показаний
-      @last_indication_old_metter = @user.indications.build(indication_params[:last_indication_old_metter])
-      @new_indication_new_metter = @user.indications.build(indication_params[:new_indication_new_metter])
-
       if @user.tariff_mono?
-        @zero_indication_new_metter = @user.indications.build(all_day_reading: 0)
+        @last_indication_old_metter = @user.indications.build(params.require(:last_indication_old_metter).permit(:all_day_reading).merge(is_correct: false))
+        @zero_indication_new_metter = @user.indications.build(all_day_reading: 0, is_correct: false)
+        @new_indication_new_metter = @user.indications.build(params.require(:new_indication_new_metter).permit(:all_day_reading).merge(is_correct: true))
       else
-        @zero_indication_new_metter = @user.indications.build(day_time_reading: 0, night_time_reading: 0)
+        @last_indication_old_metter = @user.indications.build(params.require(:last_indication_old_metter).permit(:day_time_reading, :night_time_reading).merge(is_correct: false))
+        @zero_indication_new_metter = @user.indications.build(day_time_reading: 0, night_time_reading: 0, is_correct: false)
+        @new_indication_new_metter = @user.indications.build(params.require(:new_indication_new_metter).permit(:day_time_reading, :night_time_reading).merge(is_correct: true))
       end
+
+      # @last_indication_old_metter.skip_previous_check = true
+      @zero_indication_new_metter.skip_previous_check = true
+      # @new_indication_new_metter.skip_previous_check = true
 
       Indication.transaction do
         @last_indication_old_metter.save!
@@ -27,8 +31,7 @@ module Users
         @new_indication_new_metter.save!
       end
 
-      redirect_to user_indications_path(@user), notice: "Показания успешно сохранены"
-
+      redirect_to indications_path(@user), notice: "Показания успешно сохранены"
     rescue ActiveRecord::RecordInvalid => e
       flash.now[:alert] = "Ошибка при сохранении показаний: #{e.message}"
       render :new_reset_electricity_meter, status: :unprocessable_entity

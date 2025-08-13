@@ -35,10 +35,16 @@ class Indication < ApplicationRecord
 
   validate :readings_correspond_to_tariff
   validate :only_one_correct_indication_per_month
-  validate :indication_now_bigger_previous
+  validate :indication_now_bigger_previous, unless: :skip_previous_check?
   validates :all_day_reading, :day_time_reading, :night_time_reading, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
+  attr_accessor :skip_previous_check
+
   private
+
+  def skip_previous_check?
+    skip_previous_check == true
+  end
 
   def set_default_for_month
     self.for_month ||= Date.current
