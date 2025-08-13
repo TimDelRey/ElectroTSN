@@ -1,0 +1,6 @@
+h1 Новый сброс показаний счетчика для пользователя #{@user.full_name}
+
+- if @user.tariff_mono?
+  = render "form_mono_new_reset_electricity_meter"
+- else
+  = render "form_duo_new_reset_electricity_meter"

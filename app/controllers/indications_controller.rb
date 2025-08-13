@@ -66,15 +66,6 @@ class IndicationsController < Users::BaseController
     render json: user_month_indications
   end
 
-  def new_reset_electricity_meter
-  end
-
-  def create_reset_electricity_meter
-    last_indication_old_metter
-    zero_indication_new_metter
-    new_indication_new_metter
-  end
-
   private
 
   def set_current_user

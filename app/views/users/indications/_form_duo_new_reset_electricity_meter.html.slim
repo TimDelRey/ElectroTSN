@@ -1,0 +1,39 @@
+h1 Новый сброс показаний счетчика для пользователя #{@user.full_name}
+
+= form_with url: create_reset_electricity_meter_user_indications_path(@user), method: :post, local: true do |f|
+
+  h2 Обновление двухтарифного счетчика
+  table
+    tr
+      th Зона тарифа
+      th Предыдущие показания
+      th Последние показания старого счетчика
+      th Новое показание нового счетчика
+    tr 
+      td Дневные показания Т1
+      td = previous_day_reading(@last_indication)
+
+      = f.fields_for :last_indication_old_metter, @last_indication_old_metter do |i|
+        td
+          .field
+            = i.number_field :day_time_reading, step: 0.01
+
+      = f.fields_for :new_indication_new_metter, @new_indication_new_metter do |i|
+        td
+          .field
+            = i.number_field :day_time_reading, step: 0.01
+    tr 
+      td Ночные показания Т2
+      td = previous_night_reading(@last_indication)
+
+      = f.fields_for :last_indication_old_metter, @last_indication_old_metter do |i|
+        td
+          .field
+            = i.number_field :night_time_reading, step: 0.01
+
+      = f.fields_for :new_indication_new_metter, @new_indication_new_metter do |i|
+        td
+          .field
+            = i.number_field :night_time_reading, step: 0.01
+
+  = f.submit 'Сохранить'
