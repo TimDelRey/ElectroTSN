@@ -28,7 +28,7 @@ class IndicationsController < Users::BaseController
     @user_indications = Indication
       .where(user: @user)
       .for_recent_months(@months.to_i)
-      .order(user_id: :asc, for_month: :desc)
+      .order(user_id: :asc, id: :desc)
   end
 
   def new_collective

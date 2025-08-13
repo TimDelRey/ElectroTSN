@@ -30,7 +30,7 @@
                 br
                 | Т2: #{indication&.night_time_reading || "-"}
 
-          - current = indications.find { |i| i.for_month.beginning_of_month == current_month }
+          - current = indications.correct.find { |i| i.for_month.beginning_of_month == current_month }
 
           - if user.tariff_mono?
             td

@@ -1,4 +1,3 @@
-# app/services/indication_service/create_collective.rb
 module IndicationService
   class CreateCollective
     include Service
