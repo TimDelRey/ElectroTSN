@@ -10,7 +10,7 @@ module Users
     end
 
     def create_reset_electricity_meter
-      result = IndicationService::CreateResetIndications.call(@user, indications_params)
+      result = IndicationService::CreateReset.call(@user, indications_params)
 
       if result
         redirect_to indications_path(@user), notice: "Показания успешно сохранены"

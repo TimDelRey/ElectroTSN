@@ -1,5 +1,5 @@
 module IndicationService
-  class CreateResetIndications
+  class CreateReset
     include Service
 
     def initialize(user, indications_params)
