@@ -25,7 +25,7 @@ require 'rails_helper'
 RSpec.describe Indication, type: :model do
   describe 'testing mono indication' do
     let!(:user) { create(:user, tariff: 'mono') }
-    let!(:previous_indication) { create(:indication, for_month: Date.today - 1.month, all_day_reading: 50, user: user) }
+    let!(:previous_indication) { create(:indication, for_month: Date.today - 1.month, all_day_reading: 50, user: user, is_correct: true) }
 
     subject { build(:indication, user: user) }
 
@@ -40,7 +40,7 @@ RSpec.describe Indication, type: :model do
         expect(subject.day_time_reading).to be_nil
         expect(subject.night_time_reading).to be_nil
         expect(subject.for_month).to eq(Date.today)
-        expect(subject.is_correct).to eq(true)
+        expect(subject.is_correct).to be_nil
         expect(subject.user).to eq(user)
         expect(subject.all_day_reading).to be > previous_indication.all_day_reading
       end
@@ -67,7 +67,9 @@ RSpec.describe Indication, type: :model do
 
     context 'when 2 indication/month has is_correct mark' do
       it 'indication is not saved' do
-        create(:indication, user: user, is_correct: true, for_month: Date.today)
+        subject.is_correct = true
+        subject.all_day_reading = 100
+        create(:indication, user: user, is_correct: true, for_month: Date.today, all_day_reading: 150)
 
         expect(subject).not_to be_valid
         expect(subject.save).to eq(false)
@@ -77,17 +79,27 @@ RSpec.describe Indication, type: :model do
     context 'when the indication is now less than the previous ones' do
       it 'indication is not saved' do
         subject.all_day_reading = 10
+        subject.is_correct = true
 
         expect(subject).not_to be_valid
         expect(subject.save).to eq(false)
         expect(subject.all_day_reading).to be < previous_indication.all_day_reading
       end
     end
+
+    context 'when indication with empty readings' do
+      it 'indication is not saved' do
+        build(:indication, user: user, is_correct: true, for_month: Date.today)
+
+        expect(subject).not_to be_valid
+        expect(subject.save).to eq(false)
+      end
+    end
   end
 
   describe 'testing duo indication' do
     let!(:user) { create(:user, tariff: 'duo') }
-    let!(:previous_indication) { create(:indication, for_month: Date.today - 1.month, day_time_reading: 50, night_time_reading: 40, user: user) }
+    let!(:previous_indication) { create(:indication, for_month: Date.today - 1.month, day_time_reading: 50, night_time_reading: 40, user: user, is_correct: true) }
 
     subject { build(:indication, user: user) }
 
@@ -103,7 +115,7 @@ RSpec.describe Indication, type: :model do
         expect(subject.day_time_reading).to eq(100)
         expect(subject.night_time_reading).to eq(90)
         expect(subject.for_month).to eq(Date.today)
-        expect(subject.is_correct).to eq(true)
+        expect(subject.is_correct).to be_nil
         expect(subject.user).to eq(user)
         expect(subject.day_time_reading).to be > previous_indication.day_time_reading
         expect(subject.night_time_reading).to be > previous_indication.night_time_reading
@@ -131,6 +143,7 @@ RSpec.describe Indication, type: :model do
     context 'when the indication is now less than the previous ones' do
       it 'indication is not saved' do
         subject.day_time_reading = 10
+        subject.is_correct = true
 
         expect(subject).not_to be_valid
         expect(subject.save).to eq(false)
