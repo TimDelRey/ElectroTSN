@@ -48,7 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_002913) do
     t.float "night_time_reading"
     t.float "all_day_reading"
     t.date "for_month", default: -> { "CURRENT_DATE" }, null: false
-    t.boolean "is_correct", default: true
+    t.boolean "is_correct"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_indications_on_user_id"
@@ -80,6 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_002913) do
     t.string "last_name"
     t.integer "place_number", null: false
     t.string "tariff"
+    t.integer "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email", default: "", null: false

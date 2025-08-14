@@ -8,16 +8,6 @@ Rails.application.routes.draw do
     # get :receipts, to 'some#user_receipts'
   end
 
-  resources :users, only: [] do
-    resources :indications, only: [], module: 'users' do
-      collection do
-        # обнуление счетчика
-        get :new_reset_electricity_meter
-        post :create_reset_electricity_meter
-      end
-    end
-  end
-
   resources :tariffs, only: :index
 
   # удалить :index когда будет ручка показаний
@@ -28,20 +18,34 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :receipts, only: :create
-      resources :indications, only: :show
+      resources :indications, only: :show do
+        get :calculate_person_result
+        get :calculate_collective
+      end
     end
   end
 
-  resources :indications, only: [:index, :new, :create, :show] do
-    member do
-      get :calculate
+  resources :users, only: [] do
+    resources :indications, only: [], module: 'users' do
+      collection do
+        # обнуление счетчика
+        get :new_reset_electricity_meter
+        post :create_reset_electricity_meter
+      end
     end
+  end
 
-    collection do
-      # создание показаний месяца
-      get :new_collective
-      post :create_collective
-      get :calculate_collective
+  namespace :moderators do
+    resources :indications, only: [:index, :new, :create, :show] do
+      collection do
+        get :calculate
+        # создание показаний месяца
+        get :new_collective
+        post :create_collective
+
+        get :new_reset_electricity_meter
+        post :create_reset_electricity_meter
+      end
     end
   end
 end

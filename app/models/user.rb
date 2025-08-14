@@ -10,6 +10,7 @@
 #  first_name             :string           not null
 #  last_name              :string
 #  name                   :string
+#  phone_number           :integer
 #  place_number           :integer          not null
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime

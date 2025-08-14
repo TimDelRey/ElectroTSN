@@ -6,11 +6,11 @@ module IndicationService
       result = {}
 
       User.includes(:indications).find_each do |user|
-        indications = user.indications.for_recent_months(1).correct.order(:for_month, :id)
+        indications = user.indications.for_recent_months(1).order(:for_month, :id)
         previous = indication_previous_month(indications)
         current_set = indications_for_current_month(indications)
 
-        result[user.id] = [previous, *current_set].compact
+        result[user.id] = [previous, *current_set]
       end
 
       result
@@ -44,9 +44,7 @@ module IndicationService
     end
 
     def zero_reading?(indication)
-      indication.all_day_reading.to_f.zero? ||
-        indication.day_time_reading.to_f.zero? ||
-        indication.night_time_reading.to_f.zero?
+      indication.all_day_reading.to_f.zero? || indication.day_time_reading.to_f.zero? || indication.night_time_reading.to_f.zero?
     end
   end
 end

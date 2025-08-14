@@ -7,8 +7,8 @@
 #  id                 :bigint           not null, primary key
 #  all_day_reading    :float
 #  day_time_reading   :float
-#  for_month          :date             default: -> { "CURRENT_DATE" }, null: false
-#  is_correct         :boolean          default(TRUE)
+#  for_month          :date             not null
+#  is_correct         :boolean
 #  night_time_reading :float
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -32,10 +32,10 @@ class Indication < ApplicationRecord
   scope :for_recent_months, ->(n = 3) {
     where(for_month: n.months.ago.beginning_of_month..Date.today.end_of_month)
   }
-
-  validate :readings_correspond_to_tariff
   validate :only_one_correct_indication_per_month
   validate :indication_now_bigger_previous, unless: :skip_previous_check?
+  validate :readings_correspond_to_tariff
+  validate :nosave_if_readings_empty
   validates :all_day_reading, :day_time_reading, :night_time_reading, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
 
   attr_accessor :skip_previous_check
@@ -48,14 +48,6 @@ class Indication < ApplicationRecord
 
   def set_default_for_month
     self.for_month ||= Date.current
-  end
-
-  def readings_correspond_to_tariff
-    if user.tariff_mono?
-      errors.add(:base, "Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
-    else
-      errors.add(:base, "Введены показания не по плану #{user.tariff}") if all_day_reading.present?
-    end
   end
 
   def only_one_correct_indication_per_month
@@ -92,4 +84,18 @@ class Indication < ApplicationRecord
       end
     end
   end
+
+  def readings_correspond_to_tariff
+    if user.tariff_mono?
+      errors.add(:base, "Введены показания не по плану #{user.tariff}") if day_time_reading.present? || night_time_reading.present?
+    else
+      errors.add(:base, "Введены показания не по плану #{user.tariff}") if all_day_reading.present?
+    end
+  end
+
+  def nosave_if_readings_empty
+    if all_day_reading.blank? && day_time_reading.blank? && night_time_reading.blank?
+      errors.add(:base, 'Показания не введены')
+    end
+  end  
 end

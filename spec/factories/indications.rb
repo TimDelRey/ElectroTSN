@@ -6,7 +6,7 @@
 #  all_day_reading    :float
 #  day_time_reading   :float
 #  for_month          :date             not null
-#  is_correct         :boolean          default(TRUE)
+#  is_correct         :boolean
 #  night_time_reading :float
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
