@@ -18,34 +18,36 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :receipts, only: :create
-      resources :indications, only: :show do
-        get :calculate_person_result
-        get :calculate_collective
+      resources :indications, only: [] do
+        collection do
+          get :show_person
+          get :show_month_collective
+        end
       end
     end
   end
 
-  resources :users, only: [] do
-    resources :indications, only: [], module: 'users' do
-      collection do
-        # обнуление счетчика
-        get :new_reset_electricity_meter
-        post :create_reset_electricity_meter
-      end
-    end
-  end
+  # resources :users, only: [] do
+  #   resources :indications, only: [], module: 'users' do
+  #     collection do
+  #       # обнуление счетчика
+  #       get :new_reset_electricity_meter
+  #       post :create_reset_electricity_meter
+  #     end
+  #   end
+  # end
 
-  namespace :moderators do
-    resources :indications, only: [:index, :new, :create, :show] do
-      collection do
-        get :calculate
-        # создание показаний месяца
-        get :new_collective
-        post :create_collective
+  # namespace :moderators do
+  #   resources :indications, only: [:index, :new, :create, :show] do
+  #     collection do
+  #       get :calculate
+  #       # создание показаний месяца
+  #       get :new_collective
+  #       post :create_collective
 
-        get :new_reset_electricity_meter
-        post :create_reset_electricity_meter
-      end
-    end
-  end
+  #       get :new_reset_electricity_meter
+  #       post :create_reset_electricity_meter
+  #     end
+  #   end
+  # end
 end

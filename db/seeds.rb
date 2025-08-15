@@ -53,27 +53,21 @@ user1, user2 = User.create!([
   }
 ])
 
-indication1, indication2, indication3, indication4 = Indication.create!([
-  {
-    all_day_reading: 10,
-    for_month: Date.new(2024, 1, 25),
+4.times do |i|
+  month = Date.today.prev_month(i)
+
+  Indication.create!(
+    all_day_reading: 10 + i * 5,
+    is_correct: true,
+    for_month: month,
     user: user1
-  },
-  {
-    all_day_reading: 20,
-    for_month: Date.new(2024, 2, 25),
-    user: user1
-  },
-  {
-    day_time_reading: 10,
-    night_time_reading: 10,
-    for_month: Date.new(2024, 1, 25),
+  )
+
+  Indication.create!(
+    day_time_reading: 5 + i * 5,
+    night_time_reading: 5 + i * 5,
+    is_correct: true,
+    for_month: month,
     user: user2
-  },
-  {
-    day_time_reading: 20,
-    night_time_reading: 20,
-    for_month: Date.new(2024, 2, 25),
-    user: user2
-  }
-])
+  )
+end

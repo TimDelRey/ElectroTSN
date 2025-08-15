@@ -27,7 +27,7 @@ html
               / td = link_to 'История показаний', indications_path, class: 'button-link'
               / td = link_to 'Новые показания', new_indication_path, class: 'button-link'
 
-              td = link_to 'Завести новый месяц', new_collective_indications_path, class: 'button-link'
+              / td = link_to 'Завести новый месяц', new_collective_indications_path, class: 'button-link'
               / td = link_to 'Создать квитанцию', calculate_indication_path, class: 'button-link'
             - else
               td = link_to 'Вход', new_user_session_path
