@@ -1,12 +1,11 @@
 module Api
   module V1
-    class IndicationsController < Users::BaseController
-      # примерчик /api/v1/indications/show_person?user_id=42&date=2025-08-14
+    class IndicationsController < Api::V1::BaseController
+      # примерчик /api/v1/indications/show_person?user_id=5&date=2025-08-14
       def show_person
         user = User.find(params[:user_id])
         date = Date.parse(params[:date])
-        indication = person_correct_indication(user, date)
-
+        indication = IndicationService::Utils.person_correct_indication(user, date)
         render json: indication
       end
 

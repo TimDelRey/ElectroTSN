@@ -10,49 +10,14 @@ module IndicationService
       result = {}
 
       User.includes(:indications).find_each do |user|
-        indications = person_indications(user, @date)
-        previous = person_correct_indication(user, @date - 1.month)
-        current_set = indications_for_current_month(indications)
+        indications = IndicationService::Utils.person_indications(user, @date)
+        previous = IndicationService::Utils.person_correct_indication(user, @date - 1.month)
+        current_set = IndicationService::Utils.indications_for_current_month(indications)
 
         result[user.id] = [previous, *current_set]
       end
 
       result
-    end
-
-    private
-
-    def person_indications(user, date)
-      month_range = date.beginning_of_month..date.end_of_month
-      user.indications.where(for_month: month_range)
-    end
-
-    def person_correct_indication(user, date)
-      person_indications(user, date).correct.first
-    end
-
-    def indications_for_current_month(indications)
-      if indications.any? { |i| zero_reading?(i) }
-        before_reset = indication_before_reset(indications)
-        current = indications.where(is_correct: true).order(id: :desc).first
-        [before_reset, current]
-      else
-        [indications.where(is_correct: true).order(id: :desc).first]
-      end
-    end
-
-    def indication_before_reset(indications)
-      zero_indication = indications.find { |i| zero_reading?(i) }
-      return unless zero_indication
-
-      indications
-        .where("created_at < ?", zero_indication.created_at)
-        .order(created_at: :desc)
-        .first
-    end
-
-    def zero_reading?(indication)
-      indication.all_day_reading.to_f.zero? || indication.day_time_reading.to_f.zero? || indication.night_time_reading.to_f.zero?
     end
   end
 end
