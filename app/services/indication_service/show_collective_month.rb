@@ -21,7 +21,7 @@ module IndicationService
     end
 
     private
-      
+
     def person_indications(user, date)
       month_range = date.beginning_of_month..date.end_of_month
       user.indications.where(for_month: month_range)

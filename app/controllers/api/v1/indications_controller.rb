@@ -6,6 +6,7 @@ module Api
         user = User.find(params[:user_id])
         date = Date.parse(params[:date])
         indication = person_correct_indication(user, date)
+
         render json: indication
       end
 

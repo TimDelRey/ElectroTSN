@@ -55,7 +55,7 @@
 #   end
 
 #   def new_calculate
-    
+
 #   end
 
 #   def create_calculate

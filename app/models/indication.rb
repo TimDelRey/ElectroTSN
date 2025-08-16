@@ -97,5 +97,5 @@ class Indication < ApplicationRecord
     if all_day_reading.blank? && day_time_reading.blank? && night_time_reading.blank?
       errors.add(:base, 'Показания не введены')
     end
-  end  
+  end
 end

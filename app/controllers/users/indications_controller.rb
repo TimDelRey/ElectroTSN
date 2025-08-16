@@ -1,6 +1,6 @@
 module Users
   class IndicationsController < Users::BaseController
-    before_action :set_user, only %i[new_reset_electricity_meter create_reset_electricity_meter]
+    before_action :set_user, only: %i[new_reset_electricity_meter create_reset_electricity_meter]
 
     def new_reset_electricity_meter
       @last_indication_old_metter = Indication.new
@@ -41,6 +41,5 @@ module Users
         }
       end
     end
-
   end
 end
