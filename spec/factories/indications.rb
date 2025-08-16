@@ -22,6 +22,5 @@
 #
 FactoryBot.define do
   factory :indication do
-    for_month { Date.today }
   end
 end

@@ -51,7 +51,8 @@ class Indication < ApplicationRecord
   end
 
   def only_one_correct_indication_per_month
-    return if for_month.blank?
+    return if for_month.blank? || for_month == false
+    return unless is_correct
 
     existing_correct = Indication.where.not(id: id).where(
       user: user,

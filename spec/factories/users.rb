@@ -29,7 +29,7 @@ FactoryBot.define do
     last_name      { 'Иванович' }
     place_number   { rand(1..100) }
     tariff         { 'двутариaный' }
-    email          { 'test@test.test' }
+    sequence(:email) { |n| "test#{n}@example.com" }
     password       { '123456' }
     password_confirmation { '123456' }
   end

@@ -5,7 +5,9 @@ module Api
       def show_person
         user = User.find(params[:user_id])
         date = Date.parse(params[:date])
-        indication = IndicationService::Utils.person_correct_indication(user, date)
+        # indication = IndicationService::Utils.person_correct_indication(user, date)
+        indications = IndicationService::Utils.person_indications(user, date)
+        indication = IndicationService::Utils.indications_for_current_month(indications)
         render json: indication
       end
 
