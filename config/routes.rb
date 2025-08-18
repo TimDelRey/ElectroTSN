@@ -37,17 +37,18 @@ Rails.application.routes.draw do
   #   end
   # end
 
-  # namespace :moderators do
-  #   resources :indications, only: [:index, :new, :create, :show] do
-  #     collection do
-  #       get :calculate
-  #       # создание показаний месяца
-  #       get :new_collective
-  #       post :create_collective
+  namespace :moderators do
+    resources :indications, only: [:show] do
+      collection do
+        # get :calculate
+        # создание показаний месяца
+        get :new_collective
+        post :create_collective
+        post :confirm_month
 
-  #       get :new_reset_electricity_meter
-  #       post :create_reset_electricity_meter
-  #     end
-  #   end
-  # end
+        # get :new_reset_electricity_meter
+        # post :create_reset_electricity_meter
+      end
+    end
+  end
 end

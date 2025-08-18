@@ -28,6 +28,8 @@ class Indication < ApplicationRecord
   after_initialize :set_default_for_month, if: :new_record?
 
   scope :correct, -> { where(is_correct: true) }
+  scope :not_confirmed, -> { where(is_correct: nil) }
+  scope :incorrect, -> { where(is_correct: false) }
   scope :actual, ->(user) { correct.where(user: user).order(for_month: :desc) }
   scope :for_recent_months, ->(n = 3) {
     where(for_month: n.months.ago.beginning_of_month..Date.today.end_of_month)

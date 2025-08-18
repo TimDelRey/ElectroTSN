@@ -1,4 +1,4 @@
-= form_with url: create_collective_indications_path, method: :post, local: true do
+= form_with url: create_collective_moderators_indications_path, method: :post, local: true do
   - months = (1..@months.to_i).map { |i| i.months.ago.to_date.beginning_of_month }.reverse
   - current_month = Date.today.beginning_of_month
 
@@ -18,7 +18,7 @@
     tbody
       - @user_recent_indication.each do |user, indications|
         tr
-          td = link_to "#{user.full_name}", indication_path(user), class: "btn"
+          td = link_to "#{user.full_name}", moderators_indication_path(user), class: "btn"
           td = user.place_number
           - months.each do |month|
             - indication = indications.find { |i| i.for_month.beginning_of_month == month.beginning_of_month }
@@ -30,21 +30,22 @@
                 br
                 | Т2: #{indication&.night_time_reading || "-"}
 
-          - current = indications.correct.find { |i| i.for_month.beginning_of_month == current_month }
+          - current_correct = indications.correct.find { |i| i.for_month.beginning_of_month == current_month }
+          - current_not_confirmed = indications.not_confirmed.find { |i| i.for_month.beginning_of_month == current_month }
 
           - if user.tariff_mono?
             td
               = number_field_tag "indications[#{user.id}][all_day_reading]", nil,
               step: 0.1,
-              placeholder: current&.all_day_reading || ''
+              placeholder: current_correct&.all_day_reading || current_not_confirmed&.all_day_reading || 'Сутки'
           - else
             td
               = number_field_tag "indications[#{user.id}][day_time_reading]", nil,
               step: 0.1,
-              placeholder: current&.day_time_reading || 'День'
+              placeholder: current_correct&.day_time_reading || current_not_confirmed&.day_time_reading || 'День'
               | /
               = number_field_tag "indications[#{user.id}][night_time_reading]", nil,
               step: 0.1,
-              placeholder: current&.night_time_reading || 'Ночь'
+              placeholder: current_correct&.night_time_reading || current_not_confirmed&.night_time_reading || 'Ночь'
 
   = submit_tag 'Сохранить все', class: "btn"

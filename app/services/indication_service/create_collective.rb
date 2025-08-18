@@ -11,14 +11,14 @@ module IndicationService
       @indications_params.each do |user_id, indications|
         user = User.find(user_id)
 
-        day = indications[:day_time_reading].presence&.to_f
-        night = indications[:night_time_reading].presence&.to_f
-        all_day = indications[:all_day_reading].presence&.to_f
+        day = indications[:day_time_reading].presence
+        night = indications[:night_time_reading].presence
+        all_day = indications[:all_day_reading].presence
 
         next if all_day.nil? && day.nil? && night.nil?
 
         indication = user.indications
-          .for_recent_months(1)
+          .for_recent_months(0)
           .first_or_initialize(for_month: Date.current)
 
         if user.tariff_mono?

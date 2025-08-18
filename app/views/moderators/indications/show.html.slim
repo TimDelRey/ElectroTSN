@@ -2,7 +2,7 @@ h1 Показания потребителя #{@user.first_name} #{@user.name} #
 
 button 'stimulus кнопка которая дернет текущую ручку с ?months=another'
 = link_to 'Квитанции', receipt_path(@user.receipts), class: "btn"
-= link_to 'Замена счетчика', new_reset_electricity_meter_user_indications_path(@user), class: "btn"
+/ = link_to 'Замена счетчика', new_reset_electricity_meter_user_indications_path(@user), class: "btn"
 table.table.table-bordered
   tr
     th Действия
@@ -24,7 +24,4 @@ table.table.table-bordered
       td = indication.day_time_reading
       td = indication.night_time_reading
       td = indication.all_day_reading
-      - if indication.is_correct
-        td = '✅'
-      - else
-        td = '❌'
+      td = indication.is_correct.nil? ? '-' : (indication.is_correct ? '✅' : '❌')
