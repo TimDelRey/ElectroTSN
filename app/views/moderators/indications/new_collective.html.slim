@@ -1,8 +1,16 @@
 h1 Ввод показаний за #{ month_name(Date.today).downcase }
-
+- if @errors.present?
+  .form-errors
+    p Пожалуйста, исправьте следующие ошибки:
+    ul
+      - @errors.each do |err|
+        li= err
+        
 / = link_to "Создать квитанции за #{ month_name(Date.today).downcase }", calculate_collective_indications_path, class: "btn"
-= link_to "Подвердить показания за #{ month_name(Date.today).downcase }", confirm_month_moderators_indications_path, class: "btn"
+= button_to "Подтвердить показания за #{month_name(Date.today).downcase}",
+            confirm_month_moderators_indications_path,
+            method: :post,
+            class: "btn"
 
 / = form_errors_for(@user_recent_indication)
 = render "form_collective"
-

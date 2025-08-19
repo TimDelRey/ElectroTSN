@@ -1,21 +1,27 @@
 module Service
   extend ActiveSupport::Concern
 
-  ResultHttpStruct = Struct.new(:success?, :data, keyword_init: true)
+  ResultHttpStruct = Struct.new(:success?, :data, :errors, keyword_init: true)
 
   included do
     def self.call(*, **)
       new(*, **).call
     end
-  end
 
-  class << self
-    def success(data = nil)
-      ResultHttpStruct.new(success?: true, data: data)
+    def self.success(data = nil)
+      ResultHttpStruct.new(success?: true, data: data, errors: [])
     end
 
-    def failure(error_message)
-      ResultHttpStruct.new(success?: false, data: { error: error_message })
+    def self.failure(errors)
+      ResultHttpStruct.new(success?: false, data: nil, errors: Array(errors))
+    end
+
+    def success(data = nil)
+      self.class.success(data)
+    end
+
+    def failure(errors)
+      self.class.failure(errors)
     end
   end
 end

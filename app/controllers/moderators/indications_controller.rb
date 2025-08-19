@@ -34,16 +34,8 @@ module Moderators
 
     def new_collective
       @months = params[:months].presence || 3
-      @users = User.includes(:indications)
-
-      @user_recent_indication = {}
-      @users.each do |user|
-      recent_indication = user.indications
-        .order(for_month: :desc)
-        .limit(@months)
-
-        @user_recent_indication[user] = recent_indication
-      end
+      result = IndicationService::RenderRecentMonths.call(@months)
+      @user_recent_indication = result.data
     end
 
     def create_collective
@@ -62,6 +54,18 @@ module Moderators
     end
 
     def confirm_month
+      result = IndicationService::ConfirmCurrentMonth.call
+
+      if result.success?
+        redirect_to new_collective_moderators_indications_path, notice: 'Показания сохранены'
+      else
+        @months = params[:months].presence || 3
+        result = IndicationService::RenderRecentMonths.call(@months)
+        @user_recent_indication = result.data
+
+        @errors = result.errors
+        render :new_collective, status: :unprocessable_entity
+      end
     end
 
     # def new_calculate
