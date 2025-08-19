@@ -1,9 +1,5 @@
 module Moderators
   class IndicationsController < Users::BaseController
-    before_action :set_current_user, only: %i[index new create]
-    before_action :set_last_indication, only: %i[new create]
-    before_action :set_months_param, only: %i[show ]
-    before_action :set_users_with_indications, only: %i[ ]
 
     # def index
     #   @indications = Indication.actual(@user).where(user: @user)
@@ -25,11 +21,12 @@ module Moderators
     # end
 
     def show
+      @months = params[:months].presence || 3
       @user = User.find(params[:id])
       @user_indications = Indication
         .where(user: @user)
         .for_recent_months(@months.to_i)
-        .order(user_id: :asc, id: :desc)
+        .order(for_month: :desc, id: :desc)
     end
 
     def new_collective
@@ -68,6 +65,28 @@ module Moderators
       end
     end
 
+    def new_reset_electricity_meter
+      @user = User.find(params[:user_id])
+      @last_indication_old_meter = Indication.new
+      @zero_indication_new_meter = Indication.new
+      @new_indication_new_meter = Indication.new
+      @last_indication = Indication.actual(@user).first
+    end
+
+    def create_reset_electricity_meter
+      @user = User.find(params[:user_id])
+      result = IndicationService::CreateReset.call(@user, indications_params)
+
+      if result.success?
+        redirect_to moderators_indication_path(@user), notice: "Показания успешно сохранены"
+      else
+        @last_indication_old_meter = @user.indications.build(indications_params[:last_indication_old_meter])
+        @new_indication_new_meter = @user.indications.build(indications_params[:new_indication_new_meter])
+        @zero_indication_new_meter = @user.indications.build(all_day_reading: 0, is_correct: false)
+        render :new_reset_electricity_meter, status: :unprocessable_entity
+      end
+    end
+
     # def new_calculate
 
     # end
@@ -85,24 +104,20 @@ module Moderators
 
     private
 
-    def set_current_user
-      @user = current_user
-    end
-
-    def set_last_indication
-      @last_indication = Indication.actual(@user).first
-    end
-
-    def set_months_param
-      @months = params[:months].presence || 3
-    end
-
-    def set_users_with_indications
-      @users = User.includes(:indications)
-    end
-
-    def indication_params
-      params.require(:indication).permit(:for_month, :all_day_reading, :day_time_reading, :night_time_reading)
+    def indications_params
+      if @user.tariff_mono?
+        {
+          last_indication_old_meter: params.require(:last_indication_old_meter).permit(:all_day_reading).merge(is_correct: false),
+          zero_indication_new_meter: { all_day_reading: 0, is_correct: false },
+          new_indication_new_meter: params.require(:new_indication_new_meter).permit(:all_day_reading).merge(is_correct: true)
+        }
+      else
+        {
+          last_indication_old_meter: params.require(:last_indication_old_meter).permit(:day_time_reading, :night_time_reading).merge(is_correct: false),
+          zero_indication_new_meter: { day_time_reading: 0, night_time_reading: 0, is_correct: false },
+          new_indication_new_meter: params.require(:new_indication_new_meter).permit(:day_time_reading, :night_time_reading).merge(is_correct: true)
+        }
+      end
     end
   end
 end

@@ -41,13 +41,11 @@ Rails.application.routes.draw do
     resources :indications, only: [:show] do
       collection do
         # get :calculate
-        # создание показаний месяца
         get :new_collective
         post :create_collective
         post :confirm_month
-
-        # get :new_reset_electricity_meter
-        # post :create_reset_electricity_meter
+        get :new_reset_electricity_meter
+        post :create_reset_electricity_meter
       end
     end
   end

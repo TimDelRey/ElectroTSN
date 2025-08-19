@@ -21,7 +21,7 @@
           td = link_to "#{user.full_name}", moderators_indication_path(user), class: "btn"
           td = user.place_number
           - months.each do |month|
-            - indication = indications.find { |i| i.for_month.beginning_of_month == month.beginning_of_month }
+            - indication = indications.correct.find { |i| i.for_month.beginning_of_month == month.beginning_of_month }
             - if user.tariff_mono?
               td= indication&.all_day_reading || "-"
             - else

@@ -55,7 +55,7 @@ user1, user2 = User.create!([
 
 indication1, indication2, indication3, indication4 = Indication.create!([
   {
-    all_day_reading: 100,
+    all_day_reading: 140,
     is_correct: false,
     for_month: Date.today.prev_month,
     user: user1
@@ -86,15 +86,15 @@ indication1, indication2, indication3, indication4 = Indication.create!([
   month = Date.today.prev_month(i)
 
   Indication.create!(
-    all_day_reading: 10 + i * 5,
+    all_day_reading: 100 - i * 5,
     is_correct: true,
     for_month: month,
     user: user1
   )
 
   Indication.create!(
-    day_time_reading: 5 + i * 5,
-    night_time_reading: 5 + i * 5,
+    day_time_reading: 200 - i * 5,
+    night_time_reading: 150 - i * 5,
     is_correct: true,
     for_month: month,
     user: user2
