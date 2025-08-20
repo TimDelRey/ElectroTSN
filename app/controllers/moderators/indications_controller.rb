@@ -1,6 +1,5 @@
 module Moderators
   class IndicationsController < Users::BaseController
-
     # def index
     #   @indications = Indication.actual(@user).where(user: @user)
     # end

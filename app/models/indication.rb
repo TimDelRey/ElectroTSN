@@ -35,7 +35,7 @@ class Indication < ApplicationRecord
     where(for_month: n.months.ago.beginning_of_month..Date.today.end_of_month)
   }
   validate :only_one_correct_indication_per_month
-  validate :indication_now_bigger_previous, unless: :skip_previous_check?
+  validate :indication_now_should_be_bigger_previous, unless: :skip_previous_check?
   validate :readings_correspond_to_tariff
   validate :nosave_if_readings_empty
   validates :all_day_reading, :day_time_reading, :night_time_reading, numericality: { greater_than_or_equal_to: 0, allow_nil: true }
@@ -66,7 +66,7 @@ class Indication < ApplicationRecord
     end
   end
 
-  def indication_now_bigger_previous
+  def indication_now_should_be_bigger_previous
     return if for_month.blank?
 
     previous_month_range = for_month.prev_month.beginning_of_month..for_month.prev_month.end_of_month

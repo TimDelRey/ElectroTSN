@@ -8,31 +8,31 @@ module IndicationService
     end
 
     def call
-      @indications_params.each do |user_id, indications|
+      @indications_params.each do |user_id, params|
         user = User.find(user_id)
 
-        day = indications[:day_time_reading].presence
-        night = indications[:night_time_reading].presence
-        all_day = indications[:all_day_reading].presence
+        day   = params[:day_time_reading].presence
+        night = params[:night_time_reading].presence
+        all_day   = params[:all_day_reading].presence
 
-        next if all_day.nil? && day.nil? && night.nil?
+        next if day.nil? && night.nil? && all_day.nil?
 
-        indication = user.indications
-          .for_recent_months(0)
-          .first_or_initialize(for_month: Date.current)
+        current_month_range = Date.current.beginning_of_month..Date.current.end_of_month
 
-        if user.tariff_mono?
-          indication.all_day_reading = all_day
-        else
-          indication.day_time_reading ||= day
-          indication.night_time_reading ||= night
+        indication =
+          user.indications.correct.where(for_month: current_month_range).last ||
+          user.indications.not_confirmed.where(for_month: current_month_range).last
 
-          indication.day_time_reading = day unless day.nil?
-          indication.night_time_reading = night unless night.nil?
+        if indication.nil?
+          indication = user.indications.new(for_month: Date.current)
         end
 
-        unless indication.save
-          @errors << "Ошибка для пользователя #{user.first_name}: #{indication.errors.full_messages.to_sentence}"
+        if changed?(user, indication, day:, night:, all_day:)
+          assign_readings(indication, user, day:, night:, all_day:)
+
+          unless indication.save
+            @errors << "Ошибка для пользователя #{user.first_name}: #{indication.errors.full_messages.to_sentence}"
+          end
         end
       end
 
@@ -43,6 +43,26 @@ module IndicationService
 
     def success?
       errors.empty?
+    end
+
+    private
+
+    def changed?(user, indication, day:, night:, all_day:)
+      if user.tariff_mono?
+        indication.all_day_reading.to_s != all_day.to_s
+      else
+        indication.day_time_reading.to_s != day.to_s ||
+          indication.night_time_reading.to_s != night.to_s
+      end
+    end
+
+    def assign_readings(indication, user, day:, night:, all_day:)
+      if user.tariff_mono?
+        indication.all_day_reading = all_day
+      else
+        indication.day_time_reading = day
+        indication.night_time_reading = night
+      end
     end
   end
 end

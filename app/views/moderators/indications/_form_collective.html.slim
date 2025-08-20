@@ -17,35 +17,14 @@
 
     tbody
       - @user_recent_indication.each do |user, indications|
+        - collection = IndicationCollection.new(indications)
         tr
-          td = link_to "#{user.full_name}", moderators_indication_path(user), class: "btn"
+          td = link_to user.full_name, moderators_indication_path(user), class: "btn"
           td = user.place_number
+
           - months.each do |month|
-            - indication = indications.correct.find { |i| i.for_month.beginning_of_month == month.beginning_of_month }
-            - if user.tariff_mono?
-              td= indication&.all_day_reading || "-"
-            - else
-              td
-                | Т1: #{indication&.day_time_reading || "-"}
-                br
-                | Т2: #{indication&.night_time_reading || "-"}
+            td = render_indication_value(collection.for_month(month), user)
 
-          - current_correct = indications.correct.find { |i| i.for_month.beginning_of_month == current_month }
-          - current_not_confirmed = indications.not_confirmed.find { |i| i.for_month.beginning_of_month == current_month }
-
-          - if user.tariff_mono?
-            td
-              = number_field_tag "indications[#{user.id}][all_day_reading]", nil,
-              step: 0.1,
-              placeholder: current_correct&.all_day_reading || current_not_confirmed&.all_day_reading || 'Сутки'
-          - else
-            td
-              = number_field_tag "indications[#{user.id}][day_time_reading]", nil,
-              step: 0.1,
-              placeholder: current_correct&.day_time_reading || current_not_confirmed&.day_time_reading || 'День'
-              | /
-              = number_field_tag "indications[#{user.id}][night_time_reading]", nil,
-              step: 0.1,
-              placeholder: current_correct&.night_time_reading || current_not_confirmed&.night_time_reading || 'Ночь'
+          td = render_indication_input(user, collection.current(current_month))
 
   = submit_tag 'Сохранить все', class: "btn"
