@@ -19,6 +19,6 @@
       th Текущий месяц
     tr
       td = previous_all_day_reading(@last_indication)
-      td = form.number_field :all_day_reading, step: :any, placeholder: "Введите значение"
+      td = form.number_field :all_day_reading, step: :any, placeholder: 'Введите значение'
     
   = form.submit 'Передать', class: "btn"

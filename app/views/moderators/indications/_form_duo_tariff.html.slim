@@ -1,4 +1,9 @@
-= form_with(model: @indication, url: moderators_indications_path, local: true, data: { turbo: false }, html: { multipart: true }) do |form|
+- url = @indication.persisted? ? moderators_indication_path(@indication) : moderators_indications_path(@indication, user_id: @user.id)
+= form_with(model: [ :moderators, @indication ],
+            url: url,
+            local: true,
+            data: { turbo: false },
+            html: { multipart: true }) do |form|
   .field
     = form.label :for_month, month_name(Date.current)
     / br
@@ -13,10 +18,10 @@
     tr
       td = form.label :day_time_reading, 'Дневные показания Т1'
       td = previous_day_reading(@last_indication)
-      td = form.number_field :day_time_reading, step: :any, placeholder: "Введите значение"
+      td = form.number_field :day_time_reading, step: :any, placeholder: 'Введите значение'
     tr
       td = form.label :night_time_reading, 'Ночные показания Т2'
       td = previous_night_reading(@last_indication)
-      td = form.number_field :night_time_reading, step: :any, placeholder: "Введите значение"
+      td = form.number_field :night_time_reading, step: :any, placeholder: 'Введите значение'
 
-  = form.submit 'Создать', class: "btn"
+  = form.submit 'Передать', class: "btn"

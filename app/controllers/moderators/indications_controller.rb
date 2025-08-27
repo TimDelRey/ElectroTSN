@@ -1,17 +1,15 @@
 module Moderators
   class IndicationsController < Users::BaseController
-    # def index
-    #   @indications = Indication.actual(@user).where(user: @user)
-    # end
+    before_action :set_indication_and_user_4_update, only: [:edit, :update]
+    before_action :set_user, only: [:new, :create, :new_reset_electricity_meter, :create_reset_electricity_meter]
+    before_action :set_months, only: [:show, :new_collective, :create_collective]
 
     def new
       @indication = Indication.new
-      @user = User.find(params[:user_id])
       @last_indication = Indication.actual(@user).first
     end
 
     def create
-      @user = User.find(params[:user_id])
       @indication = Indication.new(indications_params)
 
       if @indication.save
@@ -22,18 +20,10 @@ module Moderators
     end
 
     def edit
-      # @user = User.find(params[:user_id])
-      # @indication = @user.indications.find(params[:id])
-      @indication = Indication.find(params[:id])
-      @user = @indication.user
       @last_indication = Indication.actual(@user).where.not(id: @indication.id).first
     end
 
     def update
-      # @user = User.find(params[:user_id])
-      @indication = Indication.find(params[:id])
-      @user = @indication.user
-
       if @indication.update(indications_params)
         redirect_to moderators_indication_path(@indication, id: @indication.user.id), notice: 'Показания обновлены'
       else
@@ -42,9 +32,7 @@ module Moderators
       end
     end
 
-
     def show
-      @months = params[:months].presence || 3
       @user = User.find(params[:id])
       @user_indications = Indication
         .where(user: @user)
@@ -53,13 +41,11 @@ module Moderators
     end
 
     def new_collective
-      @months = params[:months].presence || 3
       result = IndicationService::RenderRecentMonths.call(@months)
       @user_recent_indication = result.data
     end
 
     def create_collective
-      @months = params[:months].presence || 3
       @users = User.includes(:indications)
 
       result = IndicationService::CreateCollective.call(params[:indications])
@@ -89,7 +75,6 @@ module Moderators
     end
 
     def new_reset_electricity_meter
-      @user = User.find(params[:user_id])
       @last_indication_old_meter = Indication.new
       @zero_indication_new_meter = Indication.new
       @new_indication_new_meter = Indication.new
@@ -97,7 +82,6 @@ module Moderators
     end
 
     def create_reset_electricity_meter
-      @user = User.find(params[:user_id])
       result = IndicationService::CreateReset.call(@user, indications_reset_params)
 
       if result.success?
@@ -110,22 +94,20 @@ module Moderators
       end
     end
 
-    # def new_calculate
-
-    # end
-
-    # def create_calculate
-    #   indication = Indication.find(params[:id])
-    #   render json: indication
-    # end
-
-    # def calculate_collective
-    #   user_month_indications = IndicationService::ShowCollectiveMonth.call
-
-    #   render json: user_month_indications
-    # end
-
     private
+
+    def set_user
+      @user = User.find(params[:user_id])
+    end
+
+    def set_months
+      @months = params[:months].presence || 3
+    end
+
+    def set_indication_and_user_4_update
+      @indication = Indication.find(params[:id])
+      @user = @indication.user
+    end
 
     def indications_params
       base = @user.tariff_mono? ? params.require(:indication).permit(:all_day_reading) : params.require(:indication).permit(:day_time_reading, :night_time_reading)
