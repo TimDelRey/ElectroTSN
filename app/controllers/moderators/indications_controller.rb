@@ -4,20 +4,44 @@ module Moderators
     #   @indications = Indication.actual(@user).where(user: @user)
     # end
 
-    # def new
-    #   @indication = Indication.new
-    # end
+    def new
+      @indication = Indication.new
+      @user = User.find(params[:user_id])
+      @last_indication = Indication.actual(@user).first
+    end
 
-    # def create
-    #   @indication = Indication.new(indication_params)
-    #   @indication.user = current_user
+    def create
+      @user = User.find(params[:user_id])
+      @indication = Indication.new(indications_params)
 
-    #   if @indication.save
-    #     redirect_to indications_path, notice: 'Показания сохранены'
-    #   else
-    #     render :new, status: :unprocessable_entity
-    #   end
-    # end
+      if @indication.save
+        redirect_to moderators_indication_path(@user), notice: 'Показания сохранены'
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      # @user = User.find(params[:user_id])
+      # @indication = @user.indications.find(params[:id])
+      @indication = Indication.find(params[:id])
+      @user = @indication.user
+      @last_indication = Indication.actual(@user).where.not(id: @indication.id).first
+    end
+
+    def update
+      # @user = User.find(params[:user_id])
+      @indication = Indication.find(params[:id])
+      @user = @indication.user
+
+      if @indication.update(indications_params)
+        redirect_to moderators_indication_path(@indication, id: @indication.user.id), notice: 'Показания обновлены'
+      else
+        @last_indication = Indication.actual(@user).where.not(id: @indication.id).first
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
 
     def show
       @months = params[:months].presence || 3
@@ -74,13 +98,13 @@ module Moderators
 
     def create_reset_electricity_meter
       @user = User.find(params[:user_id])
-      result = IndicationService::CreateReset.call(@user, indications_params)
+      result = IndicationService::CreateReset.call(@user, indications_reset_params)
 
       if result.success?
         redirect_to moderators_indication_path(@user), notice: "Показания успешно сохранены"
       else
-        @last_indication_old_meter = @user.indications.build(indications_params[:last_indication_old_meter])
-        @new_indication_new_meter = @user.indications.build(indications_params[:new_indication_new_meter])
+        @last_indication_old_meter = @user.indications.build(indications_reset_params[:last_indication_old_meter])
+        @new_indication_new_meter = @user.indications.build(indications_reset_params[:new_indication_new_meter])
         @zero_indication_new_meter = @user.indications.build(all_day_reading: 0, is_correct: false)
         render :new_reset_electricity_meter, status: :unprocessable_entity
       end
@@ -104,6 +128,11 @@ module Moderators
     private
 
     def indications_params
+      base = @user.tariff_mono? ? params.require(:indication).permit(:all_day_reading) : params.require(:indication).permit(:day_time_reading, :night_time_reading)
+      base.merge(user_id: @user.id)
+    end
+
+    def indications_reset_params
       if @user.tariff_mono?
         {
           last_indication_old_meter: params.require(:last_indication_old_meter).permit(:all_day_reading).merge(is_correct: false),

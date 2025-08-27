@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   # end
 
   namespace :moderators do
-    resources :indications, only: [:show] do
+    resources :indications, only: [:new, :create, :edit, :update, :show] do
       collection do
         # get :calculate
         get :new_collective
