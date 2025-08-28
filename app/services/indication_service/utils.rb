@@ -32,7 +32,11 @@ module IndicationService
     end
 
     def zero_reading?(indication)
-      indication.all_day_reading&.zero? || indication.day_time_reading&.zero? || indication.night_time_reading&.zero?
+      (
+        indication.all_day_reading&.zero? ||
+        indication.day_time_reading&.zero? ||
+        indication.night_time_reading&.zero?
+      ) && !indication.is_correct
     end
   end
 end

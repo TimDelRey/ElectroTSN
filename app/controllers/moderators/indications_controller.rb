@@ -104,7 +104,7 @@ module Moderators
       @months = params[:months].presence || 3
     end
 
-    def set_indication_and_user_4_update
+    def set_indication_and_user_for_update
       @indication = Indication.find(params[:id])
       @user = @indication.user
     end
@@ -115,19 +115,7 @@ module Moderators
     end
 
     def indications_reset_params
-      if @user.tariff_mono?
-        {
-          last_indication_old_meter: params.require(:last_indication_old_meter).permit(:all_day_reading).merge(is_correct: false),
-          zero_indication_new_meter: { all_day_reading: 0, is_correct: false },
-          new_indication_new_meter: params.require(:new_indication_new_meter).permit(:all_day_reading).merge(is_correct: true)
-        }
-      else
-        {
-          last_indication_old_meter: params.require(:last_indication_old_meter).permit(:day_time_reading, :night_time_reading).merge(is_correct: false),
-          zero_indication_new_meter: { day_time_reading: 0, night_time_reading: 0, is_correct: false },
-          new_indication_new_meter: params.require(:new_indication_new_meter).permit(:day_time_reading, :night_time_reading).merge(is_correct: true)
-        }
-      end
+      IndicationService::ResetParamsBuilder.call(@user, params)
     end
   end
 end
