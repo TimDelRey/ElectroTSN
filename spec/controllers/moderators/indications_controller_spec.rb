@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Moderators::IndicationsController, type: :controller do
+  render_views
   let!(:mono_user) { create(:user, tariff: 'mono') }
   let!(:duo_user) { create(:user) }
   let!(:mono_indication) { create(:indication, user: mono_user, all_day_reading: 99) }
@@ -85,8 +86,17 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
   describe 'show action' do
     context 'when click 1 user' do
       it 'show mono-indications' do
+        get :show, params: { id: mono_user.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(mono_indication.all_day_reading.to_i.to_s)
       end
       it 'show duo-indications' do
+        get :show, params: { id: duo_user.id }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(duo_indication.day_time_reading.to_i.to_s)
+        expect(response.body).to include(duo_indication.night_time_reading.to_i.to_s)
       end
     end
 
