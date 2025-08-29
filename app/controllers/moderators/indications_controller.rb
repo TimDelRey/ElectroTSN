@@ -1,6 +1,6 @@
 module Moderators
   class IndicationsController < Users::BaseController
-    before_action :set_indication_and_user_4_update, only: [:edit, :update]
+    before_action :set_indication_and_user_for_update, only: [:edit, :update]
     before_action :set_user, only: [:new, :create, :new_reset_electricity_meter, :create_reset_electricity_meter]
     before_action :set_months, only: [:show, :new_collective, :create_collective]
 

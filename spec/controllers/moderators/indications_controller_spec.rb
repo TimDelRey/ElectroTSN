@@ -3,6 +3,12 @@ require 'rails_helper'
 RSpec.describe Moderators::IndicationsController, type: :controller do
   let!(:mono_user) { create(:user, tariff: 'mono') }
   let!(:duo_user) { create(:user) }
+  let!(:mono_indication) { create(:indication, user: mono_user, all_day_reading: 99) }
+  let!(:duo_indication) { create(:indication, user: duo_user, day_time_reading: 299, night_time_reading: 199) }
+  let!(:valid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: 100 } } }
+  let!(:valid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: 300, night_time_reading: 200 } } }
+  let!(:invalid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: '' } } }
+  let!(:invalid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: '', night_time_reading: '' } } }
 
   before do
     allow(controller).to receive(:authenticate_user!)
@@ -10,9 +16,6 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
 
   describe 'create process' do
     context 'when valid data' do
-      let(:valid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: 100 } } }
-      let(:valid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: 300, night_time_reading: 200 } } }
-
       it 'indiication mono-tariff is created' do
         expect { post :create, params: valid_mono_params }.to change(Indication, :count).by(1)
 
@@ -20,6 +23,7 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
         indication = Indication.last
         expect(indication.user).to eq(mono_user)
         expect(indication.all_day_reading).to eq(100)
+        expect(indication.is_correct).to eq(nil)
       end
 
       it 'indication duo-tariff is created' do
@@ -30,39 +34,50 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
         expect(indication.user).to eq(duo_user)
         expect(indication.day_time_reading).to eq(300)
         expect(indication.night_time_reading).to eq(200)
+        expect(indication.is_correct).to eq(nil)
       end
     end
 
     context 'when reading is empty' do
-      let(:invalid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: '' } } }
-      let(:invalid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: '', night_time_reading: '' } } }
       it 'render :new again for mono-traiff' do
         expect { post :create, params: invalid_mono_params }.not_to change(Indication, :count)
-
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it 'render :new again for duo-traiff' do
         expect { post :create, params: invalid_duo_params }.not_to change(Indication, :count)
-
         expect(response).to have_http_status(:unprocessable_entity)
       end
-
     end
   end
 
   describe 'update process' do
     context 'when valid data' do
       it 'mono-taiff indiication is updated' do
+        expect { patch :update, params: valid_mono_params.merge(id: mono_indication.id) }.not_to change(Indication, :count)
+
+        expect(response).to redirect_to(moderators_indication_path(mono_indication, id: mono_user.id))
+        mono_indication.reload
+        expect(mono_indication.all_day_reading).to eq(100)
       end
       it 'duo-taiff indiication is updated' do
+        expect { patch :update, params: valid_duo_params.merge(id: duo_indication.id) }.not_to change(Indication, :count)
+
+        expect(response).to redirect_to(moderators_indication_path(duo_indication, id: duo_user.id))
+        duo_indication.reload
+        expect(duo_indication.day_time_reading).to eq(300)
+        expect(duo_indication.night_time_reading).to eq(200)
       end
     end
 
     context 'when reading is empty' do
       it 'render :edit again for mono-tariff' do
+        expect { patch :update, params: invalid_mono_params.merge(id: mono_indication.id) }.not_to change(Indication, :count)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
       it 'render :edit again for duo-tariff' do
+        expect { patch :update, params: invalid_duo_params.merge(id: duo_indication.id) }.not_to change(Indication, :count)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
