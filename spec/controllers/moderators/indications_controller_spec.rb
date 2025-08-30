@@ -207,16 +207,102 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
 
   describe 'reset metter process' do
     context 'when indication valid' do
+      let!(:indications_reset_params) {
+        {
+          'user_id' => mono_user.id.to_s,
+          'last_indication_old_meter' => {
+            'all_day_reading' => '222'
+          },
+          'new_indication_new_meter' => {
+            'all_day_reading' => '2'
+          }
+        }
+      }
       it 'created 3 indications' do
+        expect { post :create_reset_electricity_meter, params: indications_reset_params }.to change(Indication, :count).by(3)
+        expect(response).to redirect_to(moderators_indication_path(mono_user))
+        last_indication = Indication.for_recent_months(0).find_by(all_day_reading: 222, is_correct: false)
+        zero_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: false)
+        new_indication = Indication.for_recent_months(0).find_by(all_day_reading: 2, is_correct: true)
+        expect(last_indication).not_to be_nil
+        expect(zero_indication).not_to be_nil
+        expect(new_indication).not_to be_nil
       end
     end
 
-    context 'when invalid indication' do
+    context 'when field of new indication is empty' do
+      let!(:indications_reset_params) {
+        {
+          'user_id' => mono_user.id.to_s,
+          'last_indication_old_meter' => {
+            'all_day_reading' => '222'
+          },
+          'new_indication_new_meter' => {
+            'all_day_reading' => ''
+          }
+        }
+      }
       it 'created new zero indication' do
+        expect { post :create_reset_electricity_meter, params: indications_reset_params }.to change(Indication, :count).by(3)
+        expect(response).to redirect_to(moderators_indication_path(mono_user))
+        last_indication = Indication.for_recent_months(0).find_by(all_day_reading: 222, is_correct: false)
+        zero_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: false)
+        new_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: true)
+        expect(last_indication).not_to be_nil
+        expect(zero_indication).not_to be_nil
+        expect(new_indication).not_to be_nil
       end
+    end
+    context 'when field of last indication is empty' do
+      let!(:indications_reset_params) {
+        {
+          'user_id' => mono_user.id.to_s,
+          'last_indication_old_meter' => {
+            'all_day_reading' => ''
+          },
+          'new_indication_new_meter' => {
+            'all_day_reading' => '2'
+          }
+        }
+      }
+      before { mono_prev_indication.update!(is_correct: true) }
       it 'created same last month indication' do
+        expect { post :create_reset_electricity_meter, params: indications_reset_params }.to change(Indication, :count).by(3)
+        expect(response).to redirect_to(moderators_indication_path(mono_user))
+        last_indication = Indication.for_recent_months(0).find_by(all_day_reading: 40, is_correct: false)
+        zero_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: false)
+        new_indication = Indication.for_recent_months(0).find_by(all_day_reading: 2, is_correct: true)
+        indication_of_last_month = Indication.for_recent_months(1).find_by(all_day_reading: 40, is_correct: true)
+        expect(last_indication).not_to be_nil
+        expect(zero_indication).not_to be_nil
+        expect(new_indication).not_to be_nil
+        expect(indication_of_last_month).not_to be_nil
       end
+    end
+    context 'when both fields are empty' do
+      let!(:indications_reset_params) {
+        {
+          'user_id' => mono_user.id.to_s,
+          'last_indication_old_meter' => {
+            'all_day_reading' => ''
+          },
+          'new_indication_new_meter' => {
+            'all_day_reading' => ''
+          }
+        }
+      }
+      before { mono_prev_indication.update!(is_correct: true) }
       it 'created same last and new zero indication' do
+        expect { post :create_reset_electricity_meter, params: indications_reset_params }.to change(Indication, :count).by(3)
+        expect(response).to redirect_to(moderators_indication_path(mono_user))
+        last_indication = Indication.for_recent_months(0).find_by(all_day_reading: 40, is_correct: false)
+        zero_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: false)
+        new_indication = Indication.for_recent_months(0).find_by(all_day_reading: 0, is_correct: true)
+        indication_of_last_month = Indication.for_recent_months(1).find_by(all_day_reading: 40, is_correct: true)
+        expect(last_indication).not_to be_nil
+        expect(zero_indication).not_to be_nil
+        expect(new_indication).not_to be_nil
+        expect(indication_of_last_month).not_to be_nil
       end
     end
   end
