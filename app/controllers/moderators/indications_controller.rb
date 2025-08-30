@@ -110,7 +110,7 @@ module Moderators
     end
 
     def indications_params
-      base = @user.tariff_mono? ? params.require(:indication).permit(:all_day_reading) : params.require(:indication).permit(:day_time_reading, :night_time_reading)
+      base = @user.tariff_mono? ? params.require(:indication).permit(:all_day_reading, :is_correct) : params.require(:indication).permit(:day_time_reading, :night_time_reading, :is_correct)
       base.merge(user_id: @user.id)
     end
 

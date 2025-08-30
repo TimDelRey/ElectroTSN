@@ -6,7 +6,7 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
   let!(:duo_user) { create(:user) }
   let!(:mono_prev_indication) { create(:indication, user: mono_user, all_day_reading: 40, for_month: Date.today - 1.month) }
   let!(:duo_prev_indication) { create(:indication, user: duo_user, day_time_reading: 140, night_time_reading: 110, for_month: Date.today - 1.month) }
-  let!(:valid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: 100 } } }
+  let!(:valid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: 100, is_correct: false } } }
   let!(:valid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: 300, night_time_reading: 200 } } }
   let!(:invalid_mono_params) { { user_id: mono_user.id, indication: { all_day_reading: '' } } }
   let!(:invalid_duo_params) { { user_id: duo_user.id, indication: { day_time_reading: '', night_time_reading: '' } } }
@@ -24,7 +24,7 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
         indication = Indication.last
         expect(indication.user).to eq(mono_user)
         expect(indication.all_day_reading).to eq(100)
-        expect(indication.is_correct).to eq(nil)
+        expect(indication.is_correct).to eq(false)
         expect(indication.for_month).to eq(Date.today)
       end
 
@@ -62,6 +62,7 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
         expect(response).to redirect_to(moderators_indication_path(mono_prev_indication, id: mono_user.id))
         mono_prev_indication.reload
         expect(mono_prev_indication.all_day_reading).to eq(100)
+        expect(mono_prev_indication.is_correct).to eq(false)
       end
       it 'duo-taiff indiication is updated' do
         expect { patch :update, params: valid_duo_params.merge(id: duo_prev_indication.id) }.not_to change(Indication, :count)
@@ -119,7 +120,6 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
     context 'when user want watch any last indncations of all users' do
       let!(:mono_current_indication) { create(:indication, user: mono_user, all_day_reading: 60) }
       let!(:duo_current_indication) { create(:indication, user: duo_user, day_time_reading: 160, night_time_reading: 130) }
-
       it 'show indications of default last months' do
         get :new_collective
 
@@ -138,20 +138,23 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
         {
           indications: {
             mono_user.id.to_s => {
-              all_day_reading: 100
+              all_day_reading: 111
             },
             duo_user.id.to_s => {
-              day_time_reading: 200,
-              night_time_reading: 150
+              day_time_reading: 222,
+              night_time_reading: 333
             }
           }
         }
       }
-
       it 'created indication where readings is present' do
         expect { post :create_collective, params: collective_params }.to change(Indication, :count).by(2)
 
         expect(response).to redirect_to(new_collective_moderators_indications_path)
+        mono_indication = Indication.find_by(user: mono_user, all_day_reading: 111)
+        duo_indication = Indication.find_by(user: duo_user, day_time_reading: 222, night_time_reading: 333)
+        expect(mono_indication.is_correct).to eq(nil)
+        expect(duo_indication.is_correct).to eq(nil)
       end
     end
 
@@ -162,16 +165,42 @@ RSpec.describe Moderators::IndicationsController, type: :controller do
   end
 
   describe 'confirm_month process' do
-    context 'when values of current month are present' do
+    subject(:confirm) { post :confirm_month }
+    context 'when all values of current month are present' do
+      let!(:mono_current_indication) { create(:indication, user: mono_user, all_day_reading: 60, is_correct: nil) }
+      let!(:duo_current_indication) { create(:indication, user: duo_user, day_time_reading: 160, night_time_reading: 130, is_correct: nil) }
       it 'indications are created' do
+        subject
+
+        expect(response).to redirect_to(new_collective_moderators_indications_path)
+        mono_indication = Indication.find_by(user: mono_user, all_day_reading: 60)
+        duo_indication = Indication.find_by(user: duo_user, day_time_reading: 160, night_time_reading: 130)
+        expect(mono_indication.is_correct).to eq(true)
+        expect(duo_indication.is_correct).to eq(true)
       end
     end
-    context 'when current month reading is present' do
+
+    context 'when part of readings didnt presented' do
+      let!(:mono_current_indication) { create(:indication, user: mono_user, all_day_reading: 60) }
+      let!(:duo_current_indication) { create(:indication, user: duo_user, day_time_reading: 160, night_time_reading: nil) }
       it 'reading of current month become is_correct: true' do
+        subject
+
+        expect(response).to redirect_to(new_collective_moderators_indications_path)
+        mono_indication = Indication.find_by(user: mono_user, all_day_reading: 60)
+        duo_indication = Indication.find_by(user: duo_user, day_time_reading: 160, night_time_reading: nil)
+        expect(mono_indication.is_correct).to eq(true)
+        expect(duo_indication.is_correct).to eq(nil)
       end
     end
+
     context 'when readings of current month are empty' do
       it 'do nothing' do
+        subject
+        mono_empty_indications_last_month = Indication.for_recent_months(0).actual(mono_user)
+        duo_empty_indications_last_month = Indication.for_recent_months(0).actual(duo_user)
+        expect(mono_empty_indications_last_month).to be_empty
+        expect(duo_empty_indications_last_month).to be_empty
       end
     end
   end

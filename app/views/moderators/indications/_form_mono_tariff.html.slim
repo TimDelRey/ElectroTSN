@@ -17,8 +17,11 @@
     tr 
       th Предыдущий месяц
       th Текущий месяц
+      th Окончательно?
     tr
       td = previous_all_day_reading(@last_indication)
       td = form.number_field :all_day_reading, step: :any, placeholder: 'Введите значение'
+      td[colspan="2"]
+        = form.select :is_correct, options_for_select([['Не выбрано', nil], ['Да', true], ['Нет', false]], @indication.is_correct)
     
   = form.submit 'Передать', class: "btn"
