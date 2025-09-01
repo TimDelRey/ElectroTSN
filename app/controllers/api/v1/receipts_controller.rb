@@ -1,8 +1,6 @@
 module Api
   module V1
-    class ReceiptsController < Users::BaseController
-      protect_from_forgery with: :null_session
-
+    class ReceiptsController < Api::V1::BaseController
       def create
         @receipt = current_user.receipts.create(receipt_params)
 

@@ -1,0 +1,28 @@
+= form_with url: create_reset_electricity_meter_moderators_indications_path(@user), method: :post, local: true do |f|
+  = hidden_field_tag :user_id, @user.id
+
+  h2 Обновление двухтарифного счетчика
+  table
+    tr
+      th Зона тарифа
+      th Предыдущие показания
+      th Последние показания старого счетчика
+      th Новое показание нового счетчика
+
+    tr
+      td Дневные показания Т1
+      td = previous_day_reading(@last_indication)
+      td
+        = number_field_tag "last_indication_old_meter[day_time_reading]", @last_indication_old_meter.day_time_reading, step: 0.01
+      td
+        = number_field_tag "new_indication_new_meter[day_time_reading]", @new_indication_new_meter.day_time_reading, step: 0.01
+
+    tr
+      td Ночные показания Т2
+      td = previous_night_reading(@last_indication)
+      td
+        = number_field_tag "last_indication_old_meter[night_time_reading]", @last_indication_old_meter.night_time_reading, step: 0.01
+      td
+        = number_field_tag "new_indication_new_meter[night_time_reading]", @new_indication_new_meter.night_time_reading, step: 0.01
+
+  = f.submit 'Сохранить'

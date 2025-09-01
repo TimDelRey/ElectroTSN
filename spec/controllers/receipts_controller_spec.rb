@@ -1,14 +1,20 @@
 require 'rails_helper'
 
-RSpec.describe "Receipts", type: :request do
+RSpec.describe ReceiptsController, type: :controller do
+  routes { Rails.application.routes }
+
   describe "GET /download" do
+    before do
+      allow(controller).to receive(:authenticate_user!)
+    end
+
     context 'when receipt has url to s3' do
       it "redirects to the attached file URL when present" do
         receipt = create(:receipt)
-        file = fixture_file_upload("files/test.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        file = fixture_file_upload("test_file.xls", "application/vnd.ms-excel")
         receipt.xls_file.attach(file)
 
-        get download_receipt_path(receipt)
+        get :download, params: { id: receipt.id }
 
         expect(response).to redirect_to(rails_blob_url(receipt.xls_file, only_path: true))
       end
@@ -18,7 +24,7 @@ RSpec.describe "Receipts", type: :request do
       it "returns 404 if no file is attached" do
         receipt = create(:receipt)
 
-        get download_receipt_path(receipt)
+        get :download, params: { id: receipt.id }
 
         expect(response).to have_http_status(:not_found)
       end
@@ -27,7 +33,7 @@ RSpec.describe "Receipts", type: :request do
     context 'when receipt not found' do
       it "raises ActiveRecord::RecordNotFound for missing receipt" do
         expect {
-          get download_receipt_path(id: -1)
+          get :download, params: { id: -1 }
         }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end

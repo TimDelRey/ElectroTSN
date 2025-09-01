@@ -1,0 +1,7 @@
+h1 Сброс показаний счетчика пользователя #{@user.full_name}
+= form_errors_for(@user, @last_indication_old_meter, @zero_indication_new_meter, @new_indication_new_meter, @last_indication)
+
+- if @user.tariff_mono?
+  = render "form_mono_new_reset_electricity_meter"
+- else
+  = render "form_duo_new_reset_electricity_meter"

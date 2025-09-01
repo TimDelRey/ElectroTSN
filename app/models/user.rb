@@ -10,11 +10,12 @@
 #  first_name             :string           not null
 #  last_name              :string
 #  name                   :string
+#  phone_number           :integer
 #  place_number           :integer          not null
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
-#  users_tariff           :string
+#  tariff                 :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -31,4 +32,16 @@ class User < ApplicationRecord
 
   validates :first_name, presence: true
   validates :place_number, presence: true
+
+  MONO_TARIFFS = [
+    'моно', 'mono', 'однотарифный', 'solo', 'соло', 'одноставочный'
+  ].freeze
+
+  def tariff_mono?
+    MONO_TARIFFS.include?(tariff.to_s.downcase)
+  end
+
+  def full_name
+    [first_name, name, last_name].compact.join(' ')
+  end
 end

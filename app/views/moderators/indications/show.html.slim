@@ -1,0 +1,33 @@
+h1 Показания потребителя #{@user.first_name} #{@user.name} #{@user.last_name}
+= form_errors_for(@months, @user, @user_indications)
+
+button 'stimulus кнопка которая дернет текущую ручку с ?months=another'
+= link_to 'Новое показание', new_moderators_indication_path + "?user_id=#{@user.id}", class: "btn"
+= link_to 'Квитанции', receipt_path(@user.receipts), class: "btn"
+= link_to 'Замена счетчика', new_reset_electricity_meter_moderators_indications_path(params: { user_id: @user.id }), class: "btn"
+table.table.table-bordered
+  tr
+    th colspan="2" Действия
+    th colspan="2" Дата
+    th Показания Т1
+    th Показания Т2
+    th Однотарифные показания
+    th Актуально?
+    
+  - @user_indications.each do |indication|
+    tr
+      / - if indication.for_month.between?(Date.current.beginning_of_month, Date.current.end_of_month) && indication.is_correct == true
+      /   td = link_to "🧮", calculate_indication_path(indication), class: "btn"
+      / - else
+      /   td = '❌'
+      td = 'ремонт'
+      - if indication.for_month.between?(Date.current.prev_month.beginning_of_month, Date.current.end_of_month)
+        td = link_to "✏️", edit_moderators_indication_path(indication), class: "btn"
+      - else 
+        td = '⛔'
+      td = indication.for_month.year
+      td = month_name(indication.for_month)
+      td = indication.day_time_reading
+      td = indication.night_time_reading
+      td = indication.all_day_reading
+      td = indication.is_correct.nil? ? '-' : (indication.is_correct ? '✅' : '❌')
