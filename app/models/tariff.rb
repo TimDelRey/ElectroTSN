@@ -15,10 +15,7 @@
 #  updated_at        :datetime         not null
 #
 class Tariff < ApplicationRecord
-  has_many :indications
-
   scope :default_tariff, -> { where(is_default: true) }
-  # scope :latest_per_title, -> { select('DISTINCT ON (title) *').order('title, updated_at DESC') }
 
   validate :only_one_default_tariff
 

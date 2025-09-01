@@ -8,11 +8,12 @@
 #  first_name             :string           not null
 #  last_name              :string
 #  name                   :string
+#  phone_number           :integer
 #  place_number           :integer          not null
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
-#  users_tariff           :string
+#  tariff                 :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
@@ -27,8 +28,8 @@ FactoryBot.define do
     name           { 'Иван' }
     last_name      { 'Иванович' }
     place_number   { rand(1..100) }
-    users_tariff   { 'двутариaный' }
-    email          { 'test@test.test' }
+    tariff         { 'двутариaный' }
+    sequence(:email) { |n| "test#{n}@example.com" }
     password       { '123456' }
     password_confirmation { '123456' }
   end

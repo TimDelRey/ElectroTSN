@@ -1,0 +1,7 @@
+h1 Редактирование показаний
+
+= form_errors_for(@indication)
+- if @user.tariff_mono?
+  = render "form_mono_tariff"
+- else
+  = render "form_duo_tariff"

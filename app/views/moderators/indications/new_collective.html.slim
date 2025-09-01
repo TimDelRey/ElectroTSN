@@ -1,0 +1,9 @@
+h1 Ввод показаний за #{ month_name(Date.today).downcase }
+= form_errors_for(@months, @users, @user_recent_indication, @errors)
+
+= button_to "Подтвердить показания за #{month_name(Date.today).downcase}",
+            confirm_month_moderators_indications_path,
+            method: :post,
+            class: "btn"
+
+= render "form_collective"

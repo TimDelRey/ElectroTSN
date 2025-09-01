@@ -1,0 +1,24 @@
+- url = @indication.persisted? ? moderators_indication_path(@indication) : moderators_indications_path(@indication, user_id: @user.id)
+= form_with(model: [ :moderators, @indication ],
+            url: url,
+            local: true,
+            data: { turbo: false },
+            html: { multipart: true }) do |form|
+  = form.hidden_field :user_id, value: @user.id
+
+  .field
+    = form.label :for_month, month_name(Date.current)
+
+  h2 Показания
+  table
+    tr 
+      th Предыдущий месяц
+      th Текущий месяц
+      th Окончательно?
+    tr
+      td = previous_all_day_reading(@last_indication)
+      td = form.number_field :all_day_reading, step: :any, placeholder: 'Введите значение'
+      td[colspan="2"]
+        = form.select :is_correct, options_for_select([['Не выбрано', nil], ['Да', true], ['Нет', false]], @indication.is_correct)
+    
+  = form.submit 'Передать', class: "btn"
