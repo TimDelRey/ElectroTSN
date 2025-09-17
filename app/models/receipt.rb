@@ -7,6 +7,7 @@
 #  id         :bigint           not null, primary key
 #  for_month  :date
 #  signed     :boolean
+#  status     :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null
@@ -22,6 +23,8 @@
 class Receipt < ApplicationRecord
   belongs_to :user
   has_one_attached :xls_file, dependent: :purge_later
+
+  enum status: { new: 'new', processing: 'processing', done: 'done', failed: 'failed' }, _default: 'new'
 
   scope :signed_receipts_for_user, ->(user) { Receipt.where(user: user, signed: true).order(for_month: :desc) }
 
