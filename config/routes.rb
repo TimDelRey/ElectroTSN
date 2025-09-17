@@ -16,7 +16,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :receipts, only: :create
+      resources :receipts, only: [] do
+        get :complete
+      end
       resources :indications, only: [] do
         collection do
           get :show_person

@@ -24,9 +24,9 @@ gem 'jbuilder'
 gem 'tzinfo-data', platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
-gem 'solid_cache'
-gem 'solid_queue'
-gem 'solid_cable'
+# gem 'solid_cache'
+# gem 'solid_queue'
+# gem 'solid_cable'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
@@ -43,12 +43,12 @@ gem 'bootsnap', require: false
 # auth
 gem 'trestle', '~> 0.10.1'
 gem 'trestle-auth', ' ~> 0.5.0'
-gem 'trestle-search', '~> 0.5.0.filters', git: 'https://github.com/TrestleAdmin/trestle-search', branch: 'filters'
+# gem 'trestle-search', '~> 0.5.0.filters', git: 'https://github.com/TrestleAdmin/trestle-search', branch: 'filters'
 gem 'devise'
 gem 'cancancan'
 
 # xls, csv
-gem 'caxlsx' # read/write
+# gem 'caxlsx'
 # for yandex S3
 gem 'aws-sdk-s3', '~> 1.137', require: false
 
