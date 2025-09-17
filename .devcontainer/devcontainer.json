@@ -1,6 +1,7 @@
 {
   "name": "Ruby on Rails & Postgres",
   "dockerComposeFile": "docker-compose.yml",
+  // "runServices": ["sidekiq"],
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
