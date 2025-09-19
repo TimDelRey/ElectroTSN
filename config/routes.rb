@@ -16,15 +16,19 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :receipts, only: [] do
-        get :complete
-      end
       resources :indications, only: [] do
         collection do
           get :show_person
           get :show_month_collective
         end
       end
+      resources :receipts, only: [] do
+        get :complete
+      end
+      resource :tariffs, only: [] do
+        get :actual
+      end
+      resources :users, only: [:show]
     end
   end
 
