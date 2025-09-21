@@ -21,7 +21,6 @@ func (c *Consumer) Listen(ctx context.Context, out chan<- ReceiptJob) error {
         case <-ctx.Done():
             return ctx.Err()
         default:
-            // BLPop ждёт элемент 5 секунд
             res, err := c.Queue.Client.BLPop(ctx, 5*time.Second, c.Queue.Name).Result()
             if err != nil {
                 if err.Error() != "redis: nil" {
