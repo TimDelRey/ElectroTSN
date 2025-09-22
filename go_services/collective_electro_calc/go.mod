@@ -1,3 +1,3 @@
 module collective_electro_calc
 
-go 1.15
+go 1.20
