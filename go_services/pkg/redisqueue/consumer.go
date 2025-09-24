@@ -5,6 +5,8 @@ import (
     "encoding/json"
     "fmt"
     "time"
+
+    "go_services/pkg/domain"
 )
 
 type Consumer struct {
@@ -15,7 +17,7 @@ func NewConsumer(q *Queue) *Consumer {
     return &Consumer{Queue: q}
 }
 
-func (c *Consumer) Listen(ctx context.Context, out chan<- ReceiptJob) error {
+func (c *Consumer) Listen(ctx context.Context, out chan<- domain.Receipt) error {
     for {
         select {
         case <-ctx.Done():
@@ -30,7 +32,7 @@ func (c *Consumer) Listen(ctx context.Context, out chan<- ReceiptJob) error {
             }
 
             if len(res) == 2 {
-                var job ReceiptJob
+                var job domain.Receipt
                 if err := json.Unmarshal([]byte(res[1]), &job); err != nil {
                     fmt.Printf("json unmarshal error: %v\n", err)
                     continue

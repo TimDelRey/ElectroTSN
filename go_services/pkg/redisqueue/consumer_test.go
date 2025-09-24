@@ -7,17 +7,14 @@ import (
     "time"
 
     "go_services/pkg/redisqueue"
+    "go_services/pkg/domain"
 )
 
-func strPtr(s string) *string {
-    return &s
-}
-
-var testJobs = []redisqueue.ReceiptJob{
-    {ReceiptID: 1, UserID: 11, Date: strPtr("2025-09-20"), S3Key: "file1.pdf"},
-    {ReceiptID: 2, UserID: 12, Date: strPtr("2025-09-21"), S3Key: "file2.pdf"},
-    {ReceiptID: 3, UserID: 13, Date: strPtr("2025-09-22"), S3Key: "file3.pdf"},
-    {ReceiptID: 4, UserID: 14, Date: strPtr("2025-09-23"), S3Key: "file4.pdf"},
+var testJobs = []domain.Receipt{
+    {ReceiptId: 1, UserId: 11, Date: "2025-09-20", S3Key: "file1.pdf"},
+    {ReceiptId: 2, UserId: 12, Date: "2025-09-21", S3Key: "file2.pdf"},
+    {ReceiptId: 3, UserId: 13, Date: "2025-09-22", S3Key: "file3.pdf"},
+    {ReceiptId: 4, UserId: 14, Date: "2025-09-23", S3Key: "file4.pdf"},
 }
 
 func TestConsumerReadsMultipleJobs(t *testing.T) {
@@ -27,7 +24,7 @@ func TestConsumerReadsMultipleJobs(t *testing.T) {
     queue := redisqueue.NewQueue("redis:6379", "", 0, "receipts:jobs")
     consumer := redisqueue.NewConsumer(queue)
 
-    out := make(chan redisqueue.ReceiptJob, 10)
+    out := make(chan domain.Receipt, 10)
 
     if err := queue.Client.Del(ctx, queue.Name).Err(); err != nil {
         t.Fatalf("failed to clean test queue: %v", err)
@@ -46,7 +43,7 @@ func TestConsumerReadsMultipleJobs(t *testing.T) {
         }
     }()
 
-    received := make([]redisqueue.ReceiptJob, 0, len(testJobs))
+    received := make([]domain.Receipt, 0, len(testJobs))
     timeout := time.After(5 * time.Second)
 
     for len(received) < len(testJobs) {
@@ -60,7 +57,10 @@ func TestConsumerReadsMultipleJobs(t *testing.T) {
 
     for i, job := range received {
         expected := testJobs[i]
-        if job.ReceiptID != expected.ReceiptID || job.UserID != expected.UserID || job.S3Key != expected.S3Key || *job.Date != *expected.Date {
+        if job.ReceiptId != expected.ReceiptId ||
+            job.UserId != expected.UserId ||
+            job.S3Key != expected.S3Key ||
+            job.Date != expected.Date {
             t.Errorf("job %d does not match expected. got %+v, want %+v", i, job, expected)
         }
     }
