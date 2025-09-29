@@ -12,7 +12,7 @@ class GenerateReceiptJob
       receipt_id: receipt.id,
       user_id: receipt.user_id,
       date: date || receipt.for_month,
-      s3_key: receipt.xls_file.attached? ? receipt.xls_file.key : nil
+      upload_url:receipt.xls_file.blob.service_url_for_direct_upload(expires_in: 1.hour)
     }
 
     redis.rpush("receipts:jobs", payload.to_json)

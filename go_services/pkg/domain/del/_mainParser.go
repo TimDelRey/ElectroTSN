@@ -30,4 +30,16 @@ func main() {
     // fmt.Println(*data[0].FirstValue)
     // fmt.Println(*data[0].SecondValue)
     // fmt.Println(*data[0].ThirdValue)
+
+    dataMonth, err := client.GetInds("2025-08-14")
+    if err != nil {
+		panic(err)
+	}
+    month, err := domain.ParsMothColl(dataMonth)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(month)
+    fmt.Println(month["2"][0].Month)
+    fmt.Println(*month["2"][0].DayData)
 }

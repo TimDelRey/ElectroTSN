@@ -6,11 +6,6 @@ import(
 )
 
 func ParsFunc[T any](data []byte) ([]T, error) {
-    // data, err := getData()
-    // if err != nil {
-    //     return nil, err
-    // }
-
     var arr []T
     if err := json.Unmarshal(data, &arr); err == nil {
         return arr, nil
@@ -24,3 +19,10 @@ func ParsFunc[T any](data []byte) ([]T, error) {
     return nil, fmt.Errorf("invalid JSON")
 }
 
+func ParsMothColl(data []byte) (map[string][]Indication, error) {
+    var inds map[string][]Indication
+    if err := json.Unmarshal(data, &inds); err != nil {
+        return nil, err
+    }
+    return inds, nil
+}
