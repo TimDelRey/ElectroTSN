@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-ENV GO_VERSION=1.20.8
+ENV GO_VERSION=1.25.1
 ENV GO_ARCH=arm64
 
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz -O /tmp/go.tar.gz \

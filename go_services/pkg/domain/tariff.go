@@ -7,5 +7,5 @@ type Tariff struct {
     ID          int      `json:"id"`
     Title       string   `json:"title"`
     Discription string   `json:"discription"`
-    Default.    bool     `json:"is_default"`
+    Default     bool     `json:"is_default"`
 }

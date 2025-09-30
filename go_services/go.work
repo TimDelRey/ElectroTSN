@@ -1,9 +1,10 @@
-go 1.20
+go 1.22
 
 use (
+	./collective_electro_calc
+	./pkg/adapters/s3
 	./pkg/domain
 	./pkg/httpclient
 	./pkg/logger
 	./pkg/redisqueue
-	./collective_electro_calc
 )

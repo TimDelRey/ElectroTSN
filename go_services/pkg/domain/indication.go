@@ -6,6 +6,6 @@ type Indication struct {
     AllDayData   *float64 `json:"all_day_reading"`
     IndicationId int      `json:"id"`
     UserId       int      `json:"user_id"`
-    Month        string.  `json:"for_month"`
+    Month        string   `json:"for_month"`
     Correct      bool     `json:"is_correct"`
 }
