@@ -32,7 +32,7 @@ class Receipt < ApplicationRecord
 
   validate :only_one_signed_receipt_for_month, on: :create
 
-  CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  CONTENT_TYPE = "application/vnd.ms-excel"
 
   private
 
@@ -41,7 +41,7 @@ class Receipt < ApplicationRecord
 
     xls_file.attach(
       io: StringIO.new(""),
-      filename: "receipt-#{for_month}-#{id}.xlsx",
+      filename: "receipt-#{for_month}-#{id}.xls",
       content_type: CONTENT_TYPE
     )
   end

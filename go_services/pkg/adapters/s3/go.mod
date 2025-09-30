@@ -1,6 +1,6 @@
 module go_services/pkg/adapters/s3
 
-go 1.22
+go 1.25.1
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.39.2 // indirect

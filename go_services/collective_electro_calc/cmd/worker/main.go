@@ -19,8 +19,8 @@ func main() {
 	}
 	defer file.Close()
 
-	key := "cjg0knryvqgfsa8y3ly88bfs9cxd"
-	contentType := "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	key := "jdg25k91h1n3s9jpbql7zclaujp8"
+	contentType := "application/vnd.ms-excel"
 
 	if err := client.UploadFile(key, file, contentType); err != nil {
 		log.Fatal("Upload failed:", err)

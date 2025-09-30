@@ -1,6 +1,6 @@
 module go_services/pkg/redisqueue
 
-go 1.20
+go 1.25.1
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
