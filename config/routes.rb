@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         end
       end
       resources :receipts, only: [] do
+        get :calculated
         get :complete
       end
       resource :tariffs, only: [] do
