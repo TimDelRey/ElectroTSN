@@ -16,10 +16,10 @@ func main() {
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
 
-    queue := redisqueue.NewQueue("redis:6379", "", 0, "receipts:jobs")
+    queue := redisqueue.NewQueue("redis:6379", "", 0, "person_calc:jobs")
     consumer := redisqueue.NewConsumer(queue)
 
-    out := make(chan redisqueue.ReceiptJob, 100)
+    out := make(chan redisqueue.Receipt, 100)
 
     go func() {
         if err := consumer.Listen(ctx, out); err != nil {
@@ -27,12 +27,13 @@ func main() {
         }
     }()
 
-    for i := 0; i < 50; i++ {
+    numWorkers := 2
+    for i := 0; i < numWorkers; i++ {
         go func(id int) {
-            for job := range out {
-                fmt.Printf("Worker %d обрабатывает задачу: %+v\n", id, job)
+            for receipt := range out {
+                fmt.Printf("Worker %d обрабатывает квиташку: %+v\n", id, receipt)
                 time.Sleep(2 * time.Second)
-                fmt.Printf("Worker %d закончил задачу %d\n", id, job.ReceiptID)
+                fmt.Printf("Worker %d закончил обработку ReceiptID=%d\n", id, receipt.ReceiptId)
             }
         }(i)
     }
@@ -41,8 +42,10 @@ func main() {
     signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
     <-sigs
-    fmt.Println(" получен сигнал, выходим...")
+    fmt.Println(" Получен сигнал, выходим...")
 
     cancel()
     close(out)
+
+    time.Sleep(1 * time.Second)
 }

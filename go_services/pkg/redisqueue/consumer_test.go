@@ -7,10 +7,9 @@ import (
     "time"
 
     "go_services/pkg/redisqueue"
-    "go_services/pkg/domain"
 )
 
-var testJobs = []domain.Receipt{
+var testJobs = []Receipt{
     {ReceiptId: 1, UserId: 11, Date: "2025-09-20", S3Key: "file1.pdf"},
     {ReceiptId: 2, UserId: 12, Date: "2025-09-21", S3Key: "file2.pdf"},
     {ReceiptId: 3, UserId: 13, Date: "2025-09-22", S3Key: "file3.pdf"},
@@ -21,10 +20,10 @@ func TestConsumerReadsMultipleJobs(t *testing.T) {
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
 
-    queue := redisqueue.NewQueue("redis:6379", "", 0, "receipts:jobs")
+    queue := redisqueue.NewQueue("redis:6379", "", 0, "person_calc:jobs")
     consumer := redisqueue.NewConsumer(queue)
 
-    out := make(chan domain.Receipt, 10)
+    out := make(chan Receipt, 10)
 
     if err := queue.Client.Del(ctx, queue.Name).Err(); err != nil {
         t.Fatalf("failed to clean test queue: %v", err)
@@ -43,7 +42,7 @@ func TestConsumerReadsMultipleJobs(t *testing.T) {
         }
     }()
 
-    received := make([]domain.Receipt, 0, len(testJobs))
+    received := make([]Receipt, 0, len(testJobs))
     timeout := time.After(5 * time.Second)
 
     for len(received) < len(testJobs) {
