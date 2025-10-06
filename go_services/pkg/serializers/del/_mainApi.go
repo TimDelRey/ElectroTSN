@@ -4,7 +4,8 @@ import (
 	"fmt"
     "time"
 
-    "go_services/pkg/httpclient"
+    "go_services/pkg/adapters/httpclient"
+    "go_services/pkg/serializers"
     "go_services/pkg/domain"
 )
 
@@ -16,9 +17,9 @@ func main() {
     if err != nil {
 		panic(err)
 	}
-	// data, err := domain.ParsFunc[domain.User](netData)
-    // data, err := domain.ParsFunc[domain.Indication](netData)
-    data, err := domain.ParsFunc[domain.Tariff](netData)
+	// data, err := serializers.ParsApi[domain.User](netData)
+    // data, err := serializers.ParsApi[domain.Indication](netData)
+    data, err := serializers.ParsApi[domain.Tariff](netData)
 	if err != nil {
 		panic(err)
 	}
@@ -35,11 +36,11 @@ func main() {
     if err != nil {
 		panic(err)
 	}
-    month, err := domain.ParsMothColl(dataMonth)
+    month, err := serializers.ParsApiMothColl(dataMonth)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(month)
-    fmt.Println(month["2"][0].Month)
-    fmt.Println(*month["2"][0].DayData)
+    // fmt.Println(month["2"][0].Month)
+    // fmt.Println(*month["2"][0].DayData)
 }

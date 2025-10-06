@@ -5,6 +5,7 @@ import (
     "fmt"
     "time"
 
+    "go_services/pkg/domain"
     "go_services/pkg/redisqueue"
     
     "os"
@@ -19,7 +20,7 @@ func main() {
     queue := redisqueue.NewQueue("redis:6379", "", 0, "person_calc:jobs")
     consumer := redisqueue.NewConsumer(queue)
 
-    out := make(chan redisqueue.Receipt, 100)
+    out := make(chan domain.Receipt, 100)
 
     go func() {
         if err := consumer.Listen(ctx, out); err != nil {

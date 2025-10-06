@@ -1,11 +1,13 @@
-package domain
+package serializers
 
 import(
     "encoding/json"
     "fmt"
+
+    "go_services/pkg/domain"
 )
 
-func ParsFunc[T any](data []byte) ([]T, error) {
+func ParsApi[T any](data []byte) ([]T, error) {
     var arr []T
     if err := json.Unmarshal(data, &arr); err == nil {
         return arr, nil
@@ -19,8 +21,8 @@ func ParsFunc[T any](data []byte) ([]T, error) {
     return nil, fmt.Errorf("invalid JSON")
 }
 
-func ParsMothColl(data []byte) (map[string][]Indication, error) {
-    var inds map[string][]Indication
+func ParsApiMothColl(data []byte) (map[string][]domain.Indication, error) {
+    var inds map[string][]domain.Indication
     if err := json.Unmarshal(data, &inds); err != nil {
         return nil, err
     }

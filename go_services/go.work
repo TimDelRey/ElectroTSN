@@ -1,10 +1,10 @@
 go 1.25.1
 
 use (
-	./collective_electro_calc
 	./pkg/adapters/s3
+	./pkg/adapters/httpclient
 	./pkg/domain
-	./pkg/httpclient
 	./pkg/logger
 	./pkg/redisqueue
+	./pkg/serializers
 )

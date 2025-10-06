@@ -7,10 +7,6 @@ import (
 	"net/url"
 	"time"
 
-	"bytes"
-	"crypto/md5"
-	"encoding/base64"
-
 	"go_services/pkg/logger"
 )
 

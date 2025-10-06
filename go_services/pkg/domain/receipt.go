@@ -1,4 +1,4 @@
-package redisqueue
+package domain
 
 type Receipt struct {
     ReceiptId int     `json:"receipt_id"`
