@@ -20,22 +20,24 @@ func main() {
 		log.Fatal(err)
 	}
 
-	file, err := os.Open("/workspaces/ElectroTSN/spec/fixtures/files/08_august.xls")
+	// загрузка на облако
+
+	uploadFile, err := os.Open("/workspaces/ElectroTSN/spec/fixtures/files/person_calc.xlsx")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer uploadFile.Close()
 
 	key := "jdg25k91h1n3s9jpbql7zclaujp8"
-	contentType := "application/vnd.ms-excel"
+	contentType := "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
-	if err := client.UploadFile(key, file, contentType); err != nil {
+	if err := client.UploadFile(key, uploadFile, contentType); err != nil {
 		log.Fatal("Upload failed:", err)
 	}
 
 	fmt.Println("Upload successful!")
 
-
+	// загрузка с облака
 
 	downloaded, err := client.DownloadFile(key, contentType)
 	if err != nil {
@@ -44,7 +46,7 @@ func main() {
 
 	defer downloaded.Body.Close()
 
-	downloadFile, err := os.Create("/workspaces/ElectroTSN/spec/fixtures/files/downloadedFile.xls")
+	downloadFile, err := os.Create("/workspaces/ElectroTSN/spec/fixtures/files/downloadedFile.xlsx")
 
 	if err != nil {
 		log.Fatal("Creating file is failed:", err)
