@@ -2,10 +2,5 @@ go 1.25.1
 
 use (
 	./person_calc
-	./pkg/adapters/s3
-	./pkg/adapters/httpclient
-	./pkg/domain
-	./pkg/logger
-	./pkg/redisqueue
-	./pkg/serializers
+	./pkg
 )
