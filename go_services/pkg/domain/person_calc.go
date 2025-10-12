@@ -1,26 +1,38 @@
 package domain
 
+// PersonCalc может быть получен из файла (расчет либо квитанция) в облаке либо собранным из апи ручек и джобы
 type PersonCalc struct {
-    PlaceNumber       int
-    FullName          string
+    PlaceNumber int
+    FullName    string
 
-    // tariff, indications, prices can be single or duo
-    SingleTariff *string
-    TariffT1     *string
-    TariffT2     *string
-    
-    CurrentSingleInd *float64
-    CurrentT1Ind     *float64
-    CurrentT2Ind     *float64
-    LastSingleInd    *float64
-    LastT1Ind        *float64
-    LastT2Ind        *float64
+    Single *SingleZone
+    Duo    *DuoCalc
 
-    // t1 and single price are same
-    T1FirstStepPrice  *float64
-    T2FirstStepPrice  *float64
-    T1SecondStepPrice *float64
-    T2SecondStepPrice *float64
-    T1ThirdStepPrice  *float64
-    T2ThirdStepPrice  *float64
+    Summ    float64
+}
+
+type SingleZone struct {
+    Tariff TariffCalc
+}
+
+type DuoCalc struct {
+    T1 TariffCalc
+    T2 TariffCalc
+}
+
+type TariffCalc struct {
+    TariffName      string
+    CurrentInd      float64
+    LastInd         float64
+    DifValue        float64
+    Ratio           int
+    Step1Calc       float64
+    Step2Calc       float64
+    Step3Calc       float64
+    Step1Price      float64
+    Step2Price      float64
+    Step3Price      float64
+    Step1Arithmetic float64
+    Step2Arithmetic float64
+    Step3Arithmetic float64
 }
