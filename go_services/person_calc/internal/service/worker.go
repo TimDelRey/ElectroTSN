@@ -4,13 +4,6 @@ package service
 // дергать ручки, проверять флаги актуальности, сохранять в переменные, передавать в стракты
 import (
     "go_services/pkg/domain"
-    "fmt"
-)
-
-package service
-
-import (
-    "go_services/pkg/domain"
 )
 
 func Collect(

@@ -27,5 +27,5 @@ func ParsPersonCalcXls(in []byte) (domain.PersonCalc, error) {
     }
     return out, nil
 
-    // переписать c примененим NewPersonCalc        1!!!!!!!!!
+    // заменено на NewPersonCalc        1!!!!!!!!!
 }

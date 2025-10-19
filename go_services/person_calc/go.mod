@@ -1,4 +1,4 @@
-module collective_electro_calc
+module person_calc
 
 go 1.25.1
 
