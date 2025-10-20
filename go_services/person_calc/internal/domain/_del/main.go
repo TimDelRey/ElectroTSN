@@ -5,9 +5,9 @@ import (
     "io"
     "fmt"
 
-    "go_services/pkg/domain"
+    pkgdomain"go_services/pkg/domain"
     "go_services/pkg/calculator"
-    "person_calc/internal/service"
+    sdomain"person_calc/internal/domain"
     
     "github.com/joho/godotenv"
 )
@@ -17,12 +17,12 @@ func init() {
 }
 
 var (
-    singleCalc = domain.PersonCalc {
+    singleCalc = pkgdomain.PersonCalc {
         PlaceNumber: 26,
         FullName:    "Михайленко С.Г.",
 
-        Single: &domain.SingleZone {
-            Tariff: domain.TariffCalc {
+        Single: &pkgdomain.SingleZone {
+            Tariff: pkgdomain.TariffCalc {
                 TariffName: "Тариф 1",
                 CurrentInd: 39062.50,
                 LastInd:    38823.50,
@@ -32,12 +32,12 @@ var (
             },
         },
     }
-    duoCalc = domain.PersonCalc {
+    duoCalc = pkgdomain.PersonCalc {
         PlaceNumber: 18,
         FullName:    "Ким Тимур Владимирович",
 
-        Duo: &domain.DuoCalc {
-            T1: domain.TariffCalc {
+        Duo: &pkgdomain.DuoCalc {
+            T1: pkgdomain.TariffCalc {
                 TariffName: "День Т1",
                 CurrentInd: 14438.65,
                 LastInd:    13574.52,
@@ -45,7 +45,7 @@ var (
                 Step2Price: 5.47,
                 Step3Price: 9.40,
             },
-            T2: domain.TariffCalc {
+            T2: pkgdomain.TariffCalc {
                 TariffName: "Ночь Т1",
                 CurrentInd: 4132.30,
                 LastInd:    3885.21,
@@ -58,7 +58,7 @@ var (
 )
 
 func main() {
-    // генерация domain.PersonCalc
+    // пополнение pkgdomain.PersonCalc расчетами
     if err := calculator.SingleZone(&singleCalc); err != nil {
         panic(err)
     }
@@ -67,7 +67,7 @@ func main() {
     }
 
     // генерация файла xlsx
-    singleXlsx, err := service.NewSingleCalcXlsx(singleCalc)
+    singleXlsx, err := sdomain.NewSingleCalcXlsx(singleCalc)
     if err != nil {
         panic(err)
     }
@@ -79,7 +79,7 @@ func main() {
     }
     fmt.Println("Good single")
 
-    duoXlsx, err := service.NewDuoCalcXlsx(duoCalc)
+    duoXlsx, err := sdomain.NewDuoCalcXlsx(duoCalc)
     if err != nil {
         panic(err)
     }
