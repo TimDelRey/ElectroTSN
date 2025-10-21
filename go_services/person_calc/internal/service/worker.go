@@ -1,20 +1,10 @@
 package service
 
-// на вход получает receipt_job, дергает но нему ручки и выдает стракты
-// дергать ручки, проверять флаги актуальности, сохранять в переменные, передавать в стракты
 import (
     "go_services/pkg/domain"
 )
 
-func Collect() {
-//     u         domain.User,
-//     t         domain.Tariff,
-//     current_i domain.Indication,
-//     prev_i    domain.Indication,
-// ) domain.PersonCalc {
-//     file := domain.NewPersonCalc(u, t, current_i, prev_i)
-//     return rez
-// }
+func Run() {
     // раздел 1. Redis     // слушает редис
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
@@ -124,20 +114,61 @@ func Collect() {
                     }
                 }
                 // конец раздела 3
+
+                // раздел 4. Builder  // строит domain.PersonCalc.  (обработать oldInt)
+                file := domain.NewPersonCalc(user, tariff, curInt, prevInds)
+                // конец раздела 4
+
+                // раздел 5. Calculator // делает расчёты
+                if user.Tariff == "mono" {
+                    if err := calculator.SingleZone(&file); err != nil {
+                        panic(err)
+                    }
+                } else {
+                    if err := calculator.DuoZone(&file); err != nil {
+                        panic(err)
+                    }
+                }
+                // конец раздела 5
                 
+                // раздел 6. Exporter // создаёт файл
+                if user.Tariff == "mono" {
+                    singleXlsx, err := sdomain.NewSingleCalcXlsx(file)
+                    if err != nil {
+                        panic(err)
+                    }
+                } else {
+                    duoXlsx, err := sdomain.NewDuoCalcXlsx(file)
+                    if err != nil {
+                        panic(err)
+                    }
+                }
+                // конец раздела 6
 
+                // раздел 7. Uploader // кладёт в S3
+                clientCloud, err := s3.NewClient()
+                if err != nil {
+                    panic(err)
+                }
 
+                key := receipt.S3Key
+                const contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
+                err := clientCloud.UploadFile(key, file, contentType)
+                if err != nil {
+                    panic(err)
+                }
+                }
+                // конец раздела 7
 
-
-
-    Builder  // строит domain.PersonCalc
-    Calculator // делает расчёты
-    Exporter // создаёт файл
-    Uploader // кладёт в S3
-    Notifier  // дергает complete
+                // раздел 8. Notifier  // дергает complete
+                _, err := client.CompleteReceipt(receipt.ReceiptId)
+                if err != nil {
+                    panic(err)
+                }
+                // конец раздела 8
             }
-        }(i)
+        }
     }
 
     sigs := make(chan os.Signal, 1)
@@ -149,31 +180,4 @@ func Collect() {
     cancel()
     close(out)
     // конец раздела 1
-}
-
-
-
-
-
-
-    
-
-
-
-        
-
-
-
-
-
-
-
-        if err := calculator.SingleZone(&file); err != nil {
-            panic(err)
-        }
-    default:
-        if err := calculator.DuoZone(&file); err != nil {
-            panic(err)
-        }
-    }
 }
