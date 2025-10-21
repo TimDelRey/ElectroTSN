@@ -5,7 +5,7 @@ type Tariff struct {
     SecondValue float64 `json:"second_step_value"`
     ThirdValue  float64 `json:"third_step_value"`
     // ID          int      `json:"id"`
-    // Title       string   `json:"title"`
+    Title       string   `json:"title"`
     // Discription string   `json:"discription"`
     Default     bool     `json:"is_default"`
 }
