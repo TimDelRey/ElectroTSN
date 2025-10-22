@@ -7,8 +7,9 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-Indication.destroy_all
 Tariff.destroy_all
+Indication.destroy_all
+Receipt.destroy_all
 User.destroy_all
 
 all_day_tariff_first_half_of_year, all_day_tariff_second_half_of_year = Tariff.create!([

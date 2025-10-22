@@ -1,8 +1,23 @@
-h1 Ввод показаний за #{ month_name(Date.today).downcase }
+h1 Учет показаний
 = form_errors_for(@months, @users, @user_recent_indication, @errors)
 
 = button_to "Подтвердить показания за #{month_name(Date.today).downcase}",
             confirm_month_moderators_indications_path,
+            method: :post,
+            class: "btn"
+
+= button_to "Произвести расчет за #{month_name(Date.today).downcase}",
+            # generate_person_calc_jobs,
+            method: :post,
+            class: "btn"
+
+= button_to "Получить сводную за #{month_name(Date.today).downcase}",
+            # generate_collective_calc_job,
+            method: :post,
+            class: "btn"
+
+= button_to "Получить коллективную квитанцию за #{month_name(Date.today).downcase}",
+            # generate_collective_receipt_jobs,
             method: :post,
             class: "btn"
 

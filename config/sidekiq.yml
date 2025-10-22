@@ -1,4 +1,7 @@
 :concurrency: 5
 :queues:
-  - receipts
+  - person_calc
+  - collective_calc
+  - person_receipt
+  - collective_receipts
   - default
